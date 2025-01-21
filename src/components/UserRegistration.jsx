@@ -331,7 +331,7 @@ function UserRegistration({
               {type === "Update Details" && (
                 <button
                   className={`bg-red-500  ${
-                    type == "Update Details" ? "w-2/5" : "w-full"
+                    type == "Update Details" ? "w-2/6" : "w-full"
                   } text-white w-full py-2 mt-2 rounded-md`}
                   onClick={handleUpdateClose}
                 >

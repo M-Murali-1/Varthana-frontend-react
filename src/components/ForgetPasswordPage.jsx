@@ -7,12 +7,13 @@ import {
   emailValidation,
   phoneNumberValidation,
 } from "../utils/validations";
+import ResetPasswordPage from "./ResetPasswordPage";
 function ForgetPasswordPage() {
   const initial = { name: "", phone_number: "", email_id: "" };
   const [details, setDetails] = useState(initial);
-  const [error,setError] = useState("");
-  console.log(error=="",error,"the roor",!error);
-  
+  const [error, setError] = useState("");
+  console.log(error == "", error, "the roor", !error);
+
   const isValid =
     !nameValidation(details.name) &&
     !phoneNumberValidation(details.phone_number) &&
@@ -26,30 +27,32 @@ function ForgetPasswordPage() {
     setDetails({ ...details, phone_number: e.target.value });
   const handleEmailChange = (e) =>
     setDetails({ ...details, email_id: e.target.value });
-  useEffect(()=>{
+  useEffect(() => {
     setError("");
     console.log("rendering the useeffect");
-    
-  },[details])
-  const handleReset =async (e) => {
+  }, [details]);
+  const handleReset = async (e) => {
     e.preventDefault();
-    console.log("Now the details are:",details);
+    console.log("Now the details are:", details);
     try {
-    let response = await axios.post("http://localhost:8080/employee/findone",details);
-    console.log("the response here is :",response.data.message);
-    //navigate("/reset-password-page")
-    }
-    catch(err) {
-      if(err.response) {
+      let response = await axios.post(
+        "http://localhost:8080/employee/findone",
+        details
+      );
+      console.log("the response here is :", response.data.message);
+      sessionStorage.setItem("id", response.data.id);
+      navigate("/reset-password-page");
+      //<ResetPasswordPage id={response.data.id}/>
+    } catch (err) {
+      if (err.response) {
         setError(err.response.data.message);
-      }
-      else{
+      } else {
         setError(err.message);
       }
-      console.log("the error here is :",error);
-      
+      console.log("the error here is :", error);
+
       //console.log("the error is :",err.response.data.message||err.message);
-      
+
       //setError(err.)
     }
     //navigate("/reset-password-page");
@@ -140,14 +143,18 @@ function ForgetPasswordPage() {
               required
             />
           </div> */}
-          {error&&<p className="mb-2 text-red-500 text-sm text-right">{error}</p>}
+          {error && (
+            <p className="mb-2 text-red-500 text-sm text-right">{error}</p>
+          )}
           <button
             type="submit"
             className={`bg-blue-500 text-white w-full py-2 rounded-md ${
-              isValid&&(error=="") ? "hover:bg-blue-600" : "opacity-50 cursor-not-allowed"
+              isValid && error == ""
+                ? "hover:bg-blue-600"
+                : "opacity-50 cursor-not-allowed"
             }`}
             onClick={handleReset}
-            disabled={(!isValid)&&(error!="")}
+            disabled={!isValid && error != ""}
           >
             Reset Password Request
           </button>

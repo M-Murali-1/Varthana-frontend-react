@@ -1,9 +1,75 @@
-import React from "react";
-import { Link } from "react-router-dom";
-function ResetPasswordPage({id=""}) {
-  console.log("the id we got here is :",id);
-  if(id=="") {
-    navigate("/forget-password-page")
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import InputFieldComponent from "./InputFieldComponent";
+import axios from "axios";
+import {
+  passwordValidation,
+  confirmPasswordValidation,
+} from "../utils/validations";
+function ResetPasswordPage() {
+  const initial = { password: "", confirm_password: "" };
+  const [details, setDetails] = useState(initial);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+  const handlePasswordChange = (e) =>
+    setDetails({ ...details, password: e.target.value });
+  const handleConfirmPasswordChange = (e) =>
+    setDetails({ ...details, confirm_password: e.target.value });
+  //console.log("the id we got here is :",location.state.id);
+  console.log("the details here are :", details);
+
+  const id = sessionStorage.getItem("id");
+  console.log("the id here is :", id);
+  if (!id) {
+    navigate("/forget-password-page");
+  }
+
+  console.log("the id here is :", id);
+  const inputFieldsData = [
+    {
+      id: "setpassword",
+      title: "Set Password",
+      type: "password",
+      placeholder: "Enter your password",
+      handleChange: handlePasswordChange,
+      value: details.password,
+      required: true,
+      error: passwordValidation(details.password),
+    },
+    {
+      id: "confirmpassword",
+      title: "Confirm Your Password",
+      type: "password",
+      placeholder: "Confirm Password",
+      handleChange: handleConfirmPasswordChange,
+      value: details.confirm_password,
+      required: true,
+      error: confirmPasswordValidation(
+        details.confirm_password,
+        details.password
+      ),
+    },
+  ];
+  const isValid =
+    !passwordValidation(details.password) &&
+    !confirmPasswordValidation(details.confirm_password, details.password);
+  async function handleSubmit(e) {
+    e.preventDefault();
+    console.log("the data came here is :", details);
+    try {
+      let response = await axios.patch(
+        `http://localhost:8080/employee/updatepassword/${id}`,
+        details
+      );
+      console.log(response);
+      navigate("/login-page");
+    } catch (err) {
+      if (err.response) {
+        setError(err.response.data.message);
+      } else {
+        setError(err.message);
+      }
+    }
   }
   return (
     <div className="min-h-screen flex justify-center items-center bg-gray-100 px-2">
@@ -11,50 +77,27 @@ function ResetPasswordPage({id=""}) {
         <h2 className="text-center text-2xl font-bold mb-6">
           Reset Your Password
         </h2>
-        <form>
+        <form onSubmit={handleSubmit}>
           {/* Field for setting the password */}
-          <div className="mb-2">
-            <label
-              htmlFor="setpassword"
-              className="block text-sm font-medium text-gray-700 mb-2"
-            >
-              Set New Password:
-            </label>
-            <input
-              id="setpassword"
-              type="password"
-              className="border w-full px-4 py-2 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              placeholder="Enter your password"
-              required
-            />
-          </div>
-          {/* Field for confirming the password */}
-          <div className="mb-2">
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700 mb-2"
-            >
-              Confirm Your Password:
-            </label>
-            <input
-              id="confirmpassword"
-              type="password"
-              className="border w-full px-4 py-2 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              placeholder="Confirm your password"
-              required
-            />
-          </div>
+          {inputFieldsData.map((element) => (
+            <InputFieldComponent key={element.title} data={element} />
+          ))}
+          {error && (
+            <p className="mb-2 text-red-500 text-sm text-right">{error}</p>
+          )}
           <button
             type="submit"
-            className="bg-blue-500 text-white w-full py-2 rounded-md hover:bg-blue-600 transition duration-300"
-
+            className={`bg-blue-500 text-white w-full py-2 rounded-md ${
+              isValid ? "hover:bg-blue-600" : "opacity-50 cursor-not-allowed"
+            }`}
+            disabled={!isValid}
           >
             Reset Password
           </button>
         </form>
         <div>
-        <Link to="/login-page">
-            <p className="text-blue-500 hover:underline mt-2">
+          <Link to="/login-page">
+            <p className={`text-blue-500 hover:underline mt-2 `}>
               Have an account? Login
             </p>
           </Link>
