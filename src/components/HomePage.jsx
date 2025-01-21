@@ -15,9 +15,6 @@ function HomePage() {
   const [deleteEmployee, setDeleteEmployee] = useState(null);
   const [updateEmployee, setUpdateEmployee] = useState(null);
   const [addEmployee, setAddEmployee] = useState(null);
-  console.log("The deleted employee is :", deleteEmployee);
-  console.log("the added employee here is :", addEmployee);
-
   const getDetails = async () => {
     setLoading(true);
     setError("");
@@ -31,12 +28,9 @@ function HomePage() {
           },
         }
       );
-
-      console.log("Response data:", response.data);
       setEmployees(response.data);
     } catch (error) {
       setError(error.response.data.message);
-      console.log("the error :", error);
     } finally {
       setLoading(false);
     }
@@ -44,7 +38,7 @@ function HomePage() {
 
   useEffect(() => {
     getDetails();
-  }, [deleteEmployee, updateEmployee,addEmployee]);
+  }, [deleteEmployee, updateEmployee, addEmployee]);
 
   if (loading) {
     return <h1>Loading..!</h1>;
@@ -58,7 +52,6 @@ function HomePage() {
       </div>
     );
   }
-  console.log("the employees are :", employees.otherEmployees);
   employees.otherEmployees.sort((a, b) => a.id - b.id);
   return (
     <div className="min-h-screen  ">
@@ -76,21 +69,6 @@ function HomePage() {
           />
         ))}
       </div>
-      {/* <div className="bg-white p-4 my-4 rounded shadow">
-        {Object.keys(employees.otherEmployees).map((employee, index) => (
-          <div key={index} className="p-2 border-b">
-            <p>
-              <strong>ID:</strong> {employee.id}
-            </p>
-            <p>
-              <strong>Name:</strong> {employee.name}
-            </p>
-            <p>
-              <strong>Role:</strong> {employee.role}
-            </p>
-          </div>
-        ))}
-      </div> */}
     </div>
   );
 }

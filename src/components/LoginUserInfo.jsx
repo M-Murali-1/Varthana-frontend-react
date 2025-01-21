@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Modal from "@mui/material/Modal";
 import UserRegistration from "./UserRegistration";
-function LoginUserInfo({ employee,handleAdd }) {
+import ModelforUpdateAdd from "./ModelforUpdateAdd";
+function LoginUserInfo({ employee, handleAdd }) {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -33,18 +34,13 @@ function LoginUserInfo({ employee,handleAdd }) {
           Logout
         </button>
       </div>
-      <Modal open={open} onClose={handleClose}>
-        <div className="flex justify-center items-center ">
-          <div className="bg-white rounded-lg p-5 m-10 max-h-[80vh] overflow-y-auto shadow-lg max-w-lg md:max-w-3xl">
-            <UserRegistration
-              handleClose={handleClose}
-              data={employee}
-              type="Add New Employee"
-              handleAdd = {handleAdd}
-            />
-          </div>
-        </div>
-      </Modal>
+      <ModelforUpdateAdd
+        open={open}
+        handleClose={handleClose}
+        handleAdd={handleAdd}
+        type="Add New Employee"
+        data={employee}
+      />
     </div>
   );
 }

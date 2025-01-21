@@ -33,7 +33,7 @@ function InputFieldComponent({ data }) {
         />
         {data.isPassword && (
           <div
-            className="absolute bottom-2 right-2 opacity-50"
+            className="absolute bottom-2 right-2 opacity-30"
             onClick={handlePassword}
           >
             {data.type == "password" && <VisibilityOutlinedIcon />}

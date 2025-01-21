@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { useReducer } from "react";
 import UserRegistration from "./UserRegistration";
 const initialState = {
@@ -29,28 +28,15 @@ const reducer = (state, action) => {
       return { ...state, Role: action.payload.Role };
     case "reset":
       return initialState;
-      
+
   }
 };
 function SignupPage() {
   const [registerDetails, dispatch] = useReducer(reducer, initialState);
-  console.log(registerDetails);
   function handleRegister(e) {
     e.preventDefault();
-    console.log("the data got :",registerDetails);
-    
+   
   }
-  // const inputFieldsData = [
-  //   {
-  //     id: "email",
-  //     title: "Email",
-  //     type: "email",
-  //     placeholder: "Enter your email id",
-  //     handleChange: handleEmailChange,
-  //     value: loginData.email_id,
-  //     required: true,
-  //   },
-  // ];
   return (
     <div className="min-h-screen flex justify-center items-center bg-gray-100 px-2 py-5">
      <UserRegistration type="Register"/>
