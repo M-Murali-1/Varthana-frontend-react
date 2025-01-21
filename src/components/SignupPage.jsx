@@ -29,6 +29,7 @@ const reducer = (state, action) => {
       return { ...state, Role: action.payload.Role };
     case "reset":
       return initialState;
+      
   }
 };
 function SignupPage() {
