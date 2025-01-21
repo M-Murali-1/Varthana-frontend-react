@@ -1,6 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
-function ResetPasswordPage() {
+function ResetPasswordPage({id=""}) {
+  console.log("the id we got here is :",id);
+  if(id=="") {
+    navigate("/forget-password-page")
+  }
   return (
     <div className="min-h-screen flex justify-center items-center bg-gray-100 px-2">
       <div className="bg-white p-8 rounded-lg shadow-md w-80">

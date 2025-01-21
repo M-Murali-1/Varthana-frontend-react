@@ -7,12 +7,13 @@ const IndividualEmployeeDetails = ({
   employee,
   LoginUserRole,
   handleDelete,
+  handleUpdate
 }) => {
   const token = sessionStorage.getItem("token");
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  console.log("clicked", employee.id);
+  //console.log("clicked", employee.id);
 
   let data = [
     { "Employee ID": `VRT ${employee.id}` },
@@ -22,7 +23,7 @@ const IndividualEmployeeDetails = ({
     { Role: employee.Role },
     {
       Address:
-        employee.address === null ? "No Address Added" : employee.address,
+        (employee.address === null||employee.address ==="") ? "No Address Added" : employee.address,
     },
   ];
   //console.log(data);
@@ -53,8 +54,8 @@ const IndividualEmployeeDetails = ({
         <p className="font-bold">Name:</p>
         <p>{employee.name}</p>
       </div> */}
-      <div className="flex justify-between mt-2">
-        {(LoginUserRole == "admin" || LoginUserRole == "Senior Developer") && (
+      <div className="flex justify-between mt-5 items-baseline">
+        {(LoginUserRole == "Admin" || LoginUserRole == "Senior Developer") && (
           <button
             className="rounded-lg bg-blue-500 text-white px-5 py-1"
             onClick={handleOpen}
@@ -62,7 +63,7 @@ const IndividualEmployeeDetails = ({
             Edit
           </button>
         )}
-        {LoginUserRole == "admin" && (
+        {LoginUserRole == "Admin" && (
           <button
             className="rounded-lg bg-red-500 text-white px-5 py-1"
             onClick={handleDeleteButton}
@@ -78,7 +79,7 @@ const IndividualEmployeeDetails = ({
         >
              <div className="flex justify-center items-center ">
           <div className="bg-white rounded-lg p-5 m-10 max-h-[80vh] overflow-y-auto shadow-lg max-w-lg md:max-w-3xl">
-            <UserRegistration data ={employee} type="Update Details"/>
+            <UserRegistration handleUpdate={handleUpdate} handleClose={handleClose} data ={employee} type="Update Details"/>
           </div>
           </div>
         </Modal>

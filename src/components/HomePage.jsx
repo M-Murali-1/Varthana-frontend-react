@@ -5,16 +5,19 @@ import LoginUserInfo from "./LoginUserInfo";
 import IndividualEmployeeDetails from "./IndividualEmployeeDetails";
 function HomePage() {
   const navigate = useNavigate();
-  const token = sessionStorage.getItem("token"); // Retrieve token from session storage
+  const token = sessionStorage.getItem("token");
   if (!token) {
     navigate("/login-page");
   }
-  const [employees, setEmployees] = useState({}); // Initialize as an empty array
+  const [employees, setEmployees] = useState({});
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [deleteEmployee, setDeleteEmployee] = useState(null);
-  console.log("The deleted employee is :",deleteEmployee);
-  
+  const [updateEmployee, setUpdateEmployee] = useState(null);
+  const [addEmployee, setAddEmployee] = useState(null);
+  console.log("The deleted employee is :", deleteEmployee);
+  console.log("the added employee here is :", addEmployee);
+
   const getDetails = async () => {
     setLoading(true);
     setError("");
@@ -24,24 +27,24 @@ function HomePage() {
         "http://localhost:8080/employee/getall",
         {
           headers: {
-            Authorization: `${token}`, // Use proper token format
+            Authorization: `${token}`,
           },
         }
       );
 
       console.log("Response data:", response.data);
-      setEmployees(response.data); // Update state with API data
+      setEmployees(response.data);
     } catch (error) {
       setError(error.response.data.message);
       console.log("the error :", error);
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     getDetails();
-  }, [deleteEmployee]);
+  }, [deleteEmployee, updateEmployee,addEmployee]);
 
   if (loading) {
     return <h1>Loading..!</h1>;
@@ -55,16 +58,21 @@ function HomePage() {
       </div>
     );
   }
-
+  console.log("the employees are :", employees.otherEmployees);
+  employees.otherEmployees.sort((a, b) => a.id - b.id);
   return (
     <div className="min-h-screen  ">
-      <LoginUserInfo employee={employees.loginEmployee} />
+      <LoginUserInfo
+        employee={employees.loginEmployee}
+        handleAdd={setAddEmployee}
+      />
       <div className="grid min-w-md  lg:grid-cols-3 grid-cols-1  gap-5 p-5">
         {Object.values(employees.otherEmployees).map((employee) => (
           <IndividualEmployeeDetails
             employee={employee}
             LoginUserRole={employees.loginEmployee.Role}
             handleDelete={setDeleteEmployee}
+            handleUpdate={setUpdateEmployee}
           />
         ))}
       </div>

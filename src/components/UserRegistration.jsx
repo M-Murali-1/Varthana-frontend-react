@@ -1,7 +1,16 @@
-import React from "react";
-
+import React, { useState } from "react";
+import InputFieldComponent from "./InputFieldComponent";
 import { Link } from "react-router-dom";
 import { useReducer } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  confirmPasswordValidation,
+  emailValidation,
+  nameValidation,
+  passwordValidation,
+  phoneNumberValidation,
+} from "../utils/validations";
+import axios from "axios";
 let initialState = {
   name: "",
   username: "",
@@ -9,7 +18,8 @@ let initialState = {
   email_id: "",
   password: "",
   confirm_password: "",
-  Role: "",
+  Role: "Junior Developer",
+  address: "",
 };
 const reducer = (state, action) => {
   switch (action.type) {
@@ -27,214 +37,324 @@ const reducer = (state, action) => {
       return { ...state, email_id: action.payload.email_id };
     case "handleRoleChange":
       return { ...state, Role: action.payload.Role };
+    case "handleAddressChange":
+      return { ...state, address: action.payload.address };
     case "reset":
       return initialState;
   }
 };
-function UserRegistration({ data = "", type = "" }) {
+
+function UserRegistration({
+  data = "",
+  type = "",
+  handleUpdate = () => {},
+  handleClose = () => {},
+  handleAdd = () => {},
+}) {
+  const [registerError, setRegisterError] = useState({ type: "", message: "" });
   console.log(Object.keys(initialState));
-
-  if (type != "Register") {
-    let updatedState = {
-      ...initialState,
-      ...Object.keys(initialState).reduce((acc, element) => {
-        if (data.hasOwnProperty(element)&&!element.includes("password")) {
-          acc[element] = data[element];
+  const initailStateToUse =
+    type === "Update Details"
+      ? {
+          ...initialState,
+          ...Object.keys(initialState).reduce((acc, element) => {
+            if (data.hasOwnProperty(element)) {
+              acc[element] = data[element];
+            }
+            return acc;
+          }, {}),
         }
-        return acc;
-      }, {}),
-    };
-    initialState = updatedState;
-  }
-  console.log("the data:", initialState);
+      : initialState;
+  const [details, dispatch] = useReducer(reducer, initailStateToUse);
 
-  const [registerDetails, dispatch] = useReducer(reducer, initialState);
-  console.log(registerDetails);
+  if (type === "Update Details") {
+    delete details.password;
+    delete details.confirm_password;
+  }
+
+  console.log("the data for the updating purpose is :", initialState);
+
+  //console.log("the details while updating are  :", details);
+
+  const isValid =
+    !nameValidation(details.name) &&
+    !phoneNumberValidation(details.phone_number) &&
+    !emailValidation(details.email_id) &&
+    (type == "Update Details" ||
+      (!passwordValidation(details.password) &&
+        !confirmPasswordValidation(
+          details.confirm_password,
+          details.password
+        )));
+  console.log("the form is valid :", isValid);
+
+  console.log(details);
+  const navigate = useNavigate();
+  function handleUpdateClose() {
+    handleClose(false);
+    dispatch({ type: "reset" });
+  }
   function handleRegister(e) {
     e.preventDefault();
-    console.log("the data got :", registerDetails);
-  }
-  return (
-    <div>
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-lg md:max-w-3xl">
-        <h2 className="text-center text-2xl font-bold mb-6">{type}</h2>
-        <form onSubmit={handleRegister}>
-          <div className="flex gap-10 flex-col md:flex-row">
-            {/* Set 1 */}
-            <div className="w-full md:w-1/2">
-              {/* Field for name */}
-              <div className="mb-2">
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  Name:
-                </label>
-                <input
-                  id="name"
-                  type="text"
-                  value={registerDetails.name}
-                  className="border w-full px-4 py-2 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                  placeholder="Enter your name"
-                  onChange={(e) =>
-                    dispatch({
-                      type: "handleNameChange",
-                      payload: { name: e.target.value },
-                    })
-                  }
-                  required
-                />
-              </div>
-              {/* Field for username */}
-              <div className="mb-2">
-                <label
-                  htmlFor="username"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  Username:
-                </label>
-                <input
-                  id="username"
-                  type="text"
-                  value={registerDetails.username}
-                  className="border w-full px-4 py-2 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                  placeholder="Enter your username"
-                  onChange={(e) =>
-                    dispatch({
-                      type: "handleUserNameChange",
-                      payload: { username: e.target.value },
-                    })
-                  }
-                  required
-                />
-              </div>
-              {/* Field for phone number */}
-              <div className="mb-2">
-                <label
-                  htmlFor="phnumber"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  Phone Number:
-                </label>
-                <input
-                  id="phnumber"
-                  type="tel"
-                  value={registerDetails.phone_number}
-                  className="border w-full px-4 py-2 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                  placeholder="Enter your mobile number"
-                  onChange={(e) =>
-                    dispatch({
-                      type: "handlePhNumberChange",
-                      payload: { phone_number: e.target.value },
-                    })
-                  }
-                  required
-                />
-              </div>
-              {/* Field for email */}
-              <div className="mb-2">
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  Email:
-                </label>
-                <input
-                  id="email"
-                  type="email"
-                  value={registerDetails.email_id}
-                  className="border w-full px-4 py-2 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                  placeholder="Enter your email"
-                  onChange={(e) =>
-                    dispatch({
-                      type: "handleEmailIdChange",
-                      payload: { email_id: e.target.value },
-                    })
-                  }
-                  required
-                />
-              </div>
-            </div>
+    console.log("the data got :", details);
+    // let data = details;
+    // delete data.confirm_password;
+    console.log("the data for sending:", details);
 
-            {/* Set 2 */}
-            <div className="w-full md:w-1/2">
-              {/* Field for setting the password */}
-              <div className="mb-2">
-                <label
-                  htmlFor="setpassword"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  Set Password:
-                </label>
-                <input
-                  id="setpassword"
-                  type="password"
-                  value={registerDetails.password}
-                  className="border w-full px-4 py-2 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                  placeholder="Enter your password"
-                  onChange={(e) =>
-                    dispatch({
-                      type: "handlePasswordChange",
-                      payload: { password: e.target.value },
-                    })
-                  }
-                  required
-                />
-              </div>
-              {/* Field for confirming the password */}
-              <div className="mb-2">
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  Confirm Your Password:
-                </label>
-                <input
-                  id="confirmpassword"
-                  type="password"
-                  value={registerDetails.confirm_password}
-                  className="border w-full px-4 py-2 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                  placeholder="Confirm your password"
-                  onChange={(e) =>
-                    dispatch({
-                      type: "handleConfirmPasswordChange",
-                      payload: { confirm_password: e.target.value },
-                    })
-                  }
-                  required
-                />
-              </div>
-              {/* Field for selecting the role */}
+    const postEmployee = async () => {
+      try {
+        if (type == "Register") {
+          let response = await axios.post(
+            "http://localhost:8080/auth/register",
+            details
+          );
+          console.log("The response got from the server is :", response);
+          let token = response.data.token;
+          sessionStorage.setItem("token", token);
+          console.log("the token got here is :", token);
+          navigate("/home-page");
+        } else if (type == "Update Details") {
+          console.log(data.id);
+          handleUpdate(null);
+          const token = sessionStorage.getItem("token");
+          let response = await axios.patch(
+            `http://localhost:8080/employee/update/${data.id}`,
+            details,
+            {
+              headers: {
+                Authorization: `${token}`,
+              },
+            }
+          );
+          console.log("the response is :", response);
+          handleClose(false);
+          handleUpdate(data.id);
+        } else if (type == "Add New Employee") {
+          const token = sessionStorage.getItem("token");
+          let response = await axios.post(
+            "http://localhost:8080/employee/create",
+            details,
+            {
+              headers: {
+                Authorization: `${token}`,
+              },
+            }
+          );
+          console.log("the response here is after inserting :", response);
+          handleClose();
+          handleAdd(response.data.id);
+        }
+      } catch (err) {
+        console.log("the error occured here is :");
+        // if (err.response.data.type === "emailError") {
+        //   emailIdError = err.response.data.message;
+        // } else if (err.response.data.type === "PhoneNoError") {
+        //   phoneNoError = err.response.data.message;
+        // }
+        setRegisterError({ message: "There is an error" });
+      }
+    };
+    postEmployee();
+  }
+  console.log(registerError, "this is the error1");
+
+  let inputFieldsData1 = [
+    {
+      id: "name",
+      title: "Name",
+      type: "text",
+      placeholder: "Enter your name",
+      handleChange: (e) =>
+        dispatch({
+          type: "handleNameChange",
+          payload: { name: e.target.value },
+        }),
+      value: details.name,
+      required: true,
+      error: nameValidation(details.name),
+    },
+    {
+      id: "username",
+      title: "Username",
+      type: "text",
+      placeholder: "Enter your username",
+      handleChange: (e) =>
+        dispatch({
+          type: "handleUserNameChange",
+          payload: { username: e.target.value },
+        }),
+      value: details.username,
+      required: true,
+    },
+    {
+      id: "phnumber",
+      title: "Phone Number",
+      type: "tel",
+      placeholder: "Enter your mobile number",
+      handleChange: (e) =>
+        dispatch({
+          type: "handlePhNumberChange",
+          payload: { phone_number: e.target.value },
+        }),
+      value: details.phone_number,
+      required: true,
+      error:
+        phoneNumberValidation(details.phone_number) ||
+        (registerError.type == "PhoneNoError" && registerError.message),
+    },
+    {
+      id: "email",
+      title: "Email",
+      type: "email",
+      placeholder: "Enter your email",
+      handleChange: (e) =>
+        dispatch({
+          type: "handleEmailIdChange",
+          payload: { email_id: e.target.value },
+        }),
+      value: details.email_id,
+      required: true,
+      error:
+        emailValidation(details.email_id) ||
+        (registerError.type == "emailError" && registerError.message),
+    },
+  ];
+  let inputFieldsData2 = [
+    {
+      id: "setpassword",
+      title: "Set Password",
+      type: "password",
+      placeholder: "Enter your password",
+      handleChange: (e) =>
+        dispatch({
+          type: "handlePasswordChange",
+          payload: { password: e.target.value },
+        }),
+      value: details.password,
+      required: true,
+      error: passwordValidation(details.password),
+    },
+    {
+      id: "confirmpassword",
+      title: "Confirm Your Password",
+      type: "password",
+      placeholder: "Confirm Password",
+      handleChange: (e) =>
+        dispatch({
+          type: "handleConfirmPasswordChange",
+          payload: { confirm_password: e.target.value },
+        }),
+      value: details.confirm_password,
+      required: true,
+      error: confirmPasswordValidation(
+        details.confirm_password,
+        details.password
+      ),
+    },
+  ];
+  // if (type == "Update Details") {
+  //   inputFieldsData2[0] = inputFieldsData1.pop();
+  // }
+
+  return (
+    <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-lg md:max-w-3xl">
+      <h2 className="text-center text-2xl font-bold mb-6">{type}</h2>
+      <form onSubmit={handleRegister}>
+        <div className="flex gap-0 md:gap-10 flex-col md:flex-row">
+          {/* Set 1 */}
+          <div className="w-full md:w-1/2">
+            {/* Field for name,username,phone number,email */}
+            {inputFieldsData1.map((element) => (
+              <InputFieldComponent key={element.title} data={element} />
+            ))}
+          </div>
+
+          {/* Set 2 */}
+          <div className="w-full md:w-1/2">
+            {/* Field for password and confirm password */}
+            {type != "Update Details" &&
+              inputFieldsData2.map((element) => (
+                <InputFieldComponent key={element.title} data={element} />
+              ))}
+            {/* Foeld for adding Address */}
+            {type === "Update Details" && (
               <div className="mb-2">
                 <label
                   htmlFor="role"
                   className="block text-sm font-medium text-gray-700 mb-2"
                 >
-                  Select Your Role:
+                  Add Address
                 </label>
-                <select
-                  id="role"
-                  value={registerDetails.Role}
+                <textarea
+                  className="border w-full px-4 py-2 rounded-md"
+                  value={details.address}
                   onChange={(e) =>
                     dispatch({
-                      type: "handleRoleChange",
-                      payload: { Role: e.target.value },
+                      type: "handleAddressChange",
+                      payload: { address: e.target.value },
                     })
                   }
-                  className="border w-full px-4 py-2 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                >
-                  <option value="Junior Developer">Junior Developer</option>
-                  <option value="Senior Developer">Senior Developer</option>
-                  <option value="Admin">Admin</option>
-                </select>
+                  rows="5"
+                />
               </div>
-              {/* Button for submitting the form */}
+            )}
+            {/* Field for selecting the role */}
+            <div className="mb-2">
+              <label
+                htmlFor="role"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                {type != "Update Details" ? "Select Your Role" : "Update Role"}
+              </label>
+              <select
+                id="role"
+                value={details.Role}
+                onChange={(e) =>
+                  dispatch({
+                    type: "handleRoleChange",
+                    payload: { Role: e.target.value },
+                  })
+                }
+                className="border w-full px-4 py-2 rounded-md "
+              >
+                <option value="Junior Developer">Junior Developer</option>
+                <option value="Senior Developer">Senior Developer</option>
+                <option value="Admin">Admin</option>
+              </select>
+            </div>
+            {/* Button for submitting the form */}
+            <div
+              className={`${
+                type == "Update Details" ? "flex justify-between" : ""
+              }`}
+            >
+              {type === "Update Details" && (
+                <button
+                  className={`bg-red-500  ${
+                    type == "Update Details" ? "w-2/5" : "w-full"
+                  } text-white w-full py-2 mt-2 rounded-md`}
+                  onClick={handleUpdateClose}
+                >
+                  Close
+                </button>
+              )}
               <button
                 type="submit"
-                className="bg-blue-500 text-white w-full py-2 rounded-md hover:bg-blue-600 transition duration-300"
+                className={`bg-blue-500 text-white ${
+                  type == "Update Details" ? "w-2/5" : "w-full"
+                } py-2 mt-2 rounded-md ${
+                  isValid
+                    ? "hover:bg-blue-600"
+                    : "opacity-50 cursor-not-allowed"
+                }`}
+                disabled={!isValid}
               >
-                Submit
+                {type == "Register" && "Submit"}
+                {type == "Update Details" && "Update"}
+                {type == "Add New Employee" && "Add Employee"}
               </button>
+            </div>
+            {type == "Register" && (
               <div className="mt-4 text-start md:text-end flex flex-col md:flex-row justify-between">
                 <Link to="/login-page">
                   <p className="text-blue-500 hover:underline">
@@ -247,10 +367,10 @@ function UserRegistration({ data = "", type = "" }) {
                   </p>
                 </Link>
               </div>
-            </div>
+            )}
           </div>
-        </form>
-      </div>
+        </div>
+      </form>
     </div>
   );
 }

@@ -15,11 +15,12 @@ function InputFieldComponent({ data }) {
         id={data.id}
         type={data.type}
         value={data.value}
-        className="border w-full px-4 py-2 rounded-md "
+        className={`border w-full px-4 py-2 rounded-md `}
         placeholder={data.placeholder}
-        onChange={data.handleChange}
+        onChange={(e)=>data.handleChange(e)}
         required={data.required}
       />
+      {data.error&&<p className="text-xs text-end mt-1 text-red-500">{data.error}</p>}
     </div>
   );
 }
