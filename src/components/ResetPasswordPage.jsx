@@ -1,22 +1,25 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import LinkComponent from "./LinkComponent";
 import InputFieldComponent from "./InputFieldComponent";
 import axios from "axios";
 import {
   passwordValidation,
   confirmPasswordValidation,
 } from "../utils/validations";
+
 function ResetPasswordPage() {
   const initial = { password: "", confirm_password: "" };
   const [details, setDetails] = useState(initial);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
   const handlePasswordChange = (e) =>
     setDetails({ ...details, password: e.target.value });
   const handleConfirmPasswordChange = (e) =>
     setDetails({ ...details, confirm_password: e.target.value });
   const id = sessionStorage.getItem("id");
-  console.log("the id here is :", id);
+  
   if (!id) {
     navigate("/forget-password-page");
   }
@@ -49,7 +52,8 @@ function ResetPasswordPage() {
   const isValid =
     !passwordValidation(details.password) &&
     !confirmPasswordValidation(details.confirm_password, details.password);
-  async function handleSubmit(e) {
+  
+    async function handleSubmit(e) {
     e.preventDefault();
     try {
       let response = await axios.patch(
@@ -65,6 +69,7 @@ function ResetPasswordPage() {
       }
     }
   }
+  
   return (
     <div className="min-h-screen flex justify-center items-center bg-gray-100 px-2">
       <div className="bg-white p-8 rounded-lg shadow-md w-80">
@@ -89,13 +94,7 @@ function ResetPasswordPage() {
             Reset Password
           </button>
         </form>
-        <div>
-          <Link to="/login-page">
-            <p className={`text-blue-500 hover:underline mt-2 `}>
-              Have an account? Login
-            </p>
-          </Link>
-        </div>
+        <LinkComponent path="/login-page" data="Have an account? Login" />
       </div>
     </div>
   );

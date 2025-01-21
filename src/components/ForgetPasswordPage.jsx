@@ -12,20 +12,25 @@ function ForgetPasswordPage() {
   const initial = { name: "", phone_number: "", email_id: "" };
   const [details, setDetails] = useState(initial);
   const [error, setError] = useState("");
-  const isValid =
-    !nameValidation(details.name) &&
-    !phoneNumberValidation(details.phone_number) &&
-    !emailValidation(details.email_id);
   const navigate = useNavigate();
+  
   const handleNameChange = (e) =>
     setDetails({ ...details, name: e.target.value });
   const handlePhNumberChange = (e) =>
     setDetails({ ...details, phone_number: e.target.value });
   const handleEmailChange = (e) =>
     setDetails({ ...details, email_id: e.target.value });
+  
   useEffect(() => {
     setError("");
   }, [details]);
+  
+  const isValid =
+    !nameValidation(details.name) &&
+    !phoneNumberValidation(details.phone_number) &&
+    !emailValidation(details.email_id);
+
+  
   const handleReset = async (e) => {
     e.preventDefault();
     try {
@@ -43,6 +48,7 @@ function ForgetPasswordPage() {
       }
     }
   };
+  
   let inputFieldsData1 = [
     {
       id: "name",

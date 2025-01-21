@@ -1,18 +1,18 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Modal from "@mui/material/Modal";
-import UserRegistration from "./UserRegistration";
 import ModelforUpdateAdd from "./ModelforUpdateAdd";
+
 function LoginUserInfo({ employee, handleAdd }) {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  
   function handleLogoutChange() {
     sessionStorage.removeItem("token");
     navigate("/login-page");
   }
-  function handleModelOpen() {}
+
   return (
     <div className="flex p-5 bg-gray-100 justify-between items-baseline">
       <p className="text-gray-800 font-semibold">

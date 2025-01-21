@@ -1,4 +1,3 @@
-import React from "react";
 import { useReducer } from "react";
 import UserRegistration from "./UserRegistration";
 const initialState = {
@@ -31,12 +30,14 @@ const reducer = (state, action) => {
 
   }
 };
+
 function SignupPage() {
   const [registerDetails, dispatch] = useReducer(reducer, initialState);
   function handleRegister(e) {
     e.preventDefault();
    
   }
+  
   return (
     <div className="min-h-screen flex justify-center items-center bg-gray-100 px-2 py-5">
      <UserRegistration type="Register"/>

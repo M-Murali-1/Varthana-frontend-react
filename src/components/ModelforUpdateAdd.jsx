@@ -1,6 +1,7 @@
 import React from "react";
 import { Modal } from "@mui/material";
 import UserRegistration from "./UserRegistration";
+
 function ModelforUpdateAdd({
   open,
   handleClose,

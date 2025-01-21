@@ -3,6 +3,7 @@ import axios from "axios";
 import InputFieldComponent from "./InputFieldComponent";
 import LinkComponent from "./LinkComponent";
 import { useNavigate } from "react-router-dom";
+
 function LoginPage() {
   const navigate = useNavigate();
   const initial = { email_id: "", password: "" };
@@ -21,16 +22,17 @@ function LoginPage() {
       sessionStorage.setItem("token", response.data.token);
       navigate("/home-page");
     } catch (err) {
-      console.log("the error occured here is :", err);
       setError(err.response.data.message);
     }
   }
+  
   function handleEmailChange(e) {
     setLoginData((prev) => ({ ...prev, email_id: e.target.value }));
   }
   function handlePasswordChange(e) {
     setLoginData((prev) => ({ ...prev, password: e.target.value }));
   }
+  
   const inputFieldsData = [
     {
       id: "email",
@@ -51,6 +53,7 @@ function LoginPage() {
       required: true,
     },
   ];
+  
   return (
     <div className="min-h-screen flex justify-center items-center bg-gray-100 px-2">
       <div className="bg-white p-8 rounded-lg shadow-md w-80">

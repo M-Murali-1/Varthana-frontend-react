@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import InputFieldComponent from "./InputFieldComponent";
-import { Link } from "react-router-dom";
 import { useReducer } from "react";
 import { useNavigate } from "react-router-dom";
+import UserRegistrationButtons from "./UserRegistrationButtons";
+import SelectingRoleComponent from "./SelectingRoleComponent";
 import {
   confirmPasswordValidation,
   emailValidation,
@@ -11,6 +12,8 @@ import {
   phoneNumberValidation,
 } from "../utils/validations";
 import axios from "axios";
+import LinkComponent from "./LinkComponent";
+import AddressComponent from "./AddressComponent";
 let initialState = {
   name: "",
   username: "",
@@ -96,11 +99,6 @@ function UserRegistration({
   }
   function handleRegister(e) {
     e.preventDefault();
-    console.log("the data got :", details);
-    // let data = details;
-    // delete data.confirm_password;
-    console.log("the data for sending:", details);
-
     const postEmployee = async () => {
       try {
         if (type == "Register") {
@@ -108,13 +106,10 @@ function UserRegistration({
             "http://localhost:8080/auth/register",
             details
           );
-          console.log("The response got from the server is :", response);
           let token = response.data.token;
           sessionStorage.setItem("token", token);
-          console.log("the token got here is :", token);
           navigate("/home-page");
         } else if (type == "Update Details") {
-          console.log(data.id);
           handleUpdate(null);
           const token = sessionStorage.getItem("token");
           let response = await axios.patch(
@@ -126,7 +121,6 @@ function UserRegistration({
               },
             }
           );
-          console.log("the response is :", response);
           handleClose(false);
           handleUpdate(data.id);
         } else if (type == "Add New Employee") {
@@ -140,17 +134,10 @@ function UserRegistration({
               },
             }
           );
-          console.log("the response here is after inserting :", response);
           handleClose();
           handleAdd(response.data.id);
         }
       } catch (err) {
-        console.log("the error occured here is :");
-        // if (err.response.data.type === "emailError") {
-        //   emailIdError = err.response.data.message;
-        // } else if (err.response.data.type === "PhoneNoError") {
-        //   phoneNoError = err.response.data.message;
-        // }
         setRegisterError({ message: "There is an error" });
       }
     };
@@ -252,9 +239,28 @@ function UserRegistration({
       ),
     },
   ];
-  // if (type == "Update Details") {
-  //   inputFieldsData2[0] = inputFieldsData1.pop();
-  // }
+
+  let addressInput = {
+    id: "address",
+    title: "Add Address",
+    placeholder: "Add Address",
+    handleChange: (e) =>
+      dispatch({
+        type: "handleAddressChange",
+        payload: { address: e.target.value },
+      }),
+    value: details.address,
+  };
+  let selectingRoleInput = {
+    id: "role",
+    value: details.Role,
+    handleChange: (e) =>
+      dispatch({
+        type: "handleRoleChange",
+        payload: { Role: e.target.value },
+      }),
+    options: ["Junior Developer", "Senior Developer","Admin"],
+  };
 
   return (
     <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-lg md:max-w-3xl">
@@ -276,96 +282,27 @@ function UserRegistration({
               inputFieldsData2.map((element) => (
                 <InputFieldComponent key={element.title} data={element} />
               ))}
-            {/* Foeld for adding Address */}
-            {type === "Update Details" && (
-              <div className="mb-2">
-                <label
-                  htmlFor="role"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  Add Address
-                </label>
-                <textarea
-                  className="border w-full px-4 py-2 rounded-md"
-                  value={details.address}
-                  onChange={(e) =>
-                    dispatch({
-                      type: "handleAddressChange",
-                      payload: { address: e.target.value },
-                    })
-                  }
-                  rows="5"
-                />
-              </div>
-            )}
+            {/* Field for adding Address */}
+            <AddressComponent type={type} data={addressInput} />
             {/* Field for selecting the role */}
-            <div className="mb-2">
-              <label
-                htmlFor="role"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
-                {type != "Update Details" ? "Select Your Role" : "Update Role"}
-              </label>
-              <select
-                id="role"
-                value={details.Role}
-                onChange={(e) =>
-                  dispatch({
-                    type: "handleRoleChange",
-                    payload: { Role: e.target.value },
-                  })
-                }
-                className="border w-full px-4 py-2 rounded-md "
-              >
-                <option value="Junior Developer">Junior Developer</option>
-                <option value="Senior Developer">Senior Developer</option>
-                <option value="Admin">Admin</option>
-              </select>
-            </div>
+            <SelectingRoleComponent type={type} data={selectingRoleInput}/>
+            
             {/* Button for submitting the form */}
-            <div
-              className={`${
-                type == "Update Details" ? "flex justify-between" : ""
-              }`}
-            >
-              {type === "Update Details" && (
-                <button
-                  className={`bg-red-500  ${
-                    type == "Update Details" ? "w-2/6" : "w-full"
-                  } text-white w-full py-2 mt-2 rounded-md`}
-                  onClick={handleUpdateClose}
-                >
-                  Close
-                </button>
-              )}
-              <button
-                type="submit"
-                className={`bg-blue-500 text-white ${
-                  type == "Update Details" ? "w-2/5" : "w-full"
-                } py-2 mt-2 rounded-md ${
-                  isValid
-                    ? "hover:bg-blue-600"
-                    : "opacity-50 cursor-not-allowed"
-                }`}
-                disabled={!isValid}
-              >
-                {type == "Register" && "Submit"}
-                {type == "Update Details" && "Update"}
-                {type == "Add New Employee" && "Add Employee"}
-              </button>
-            </div>
+            <UserRegistrationButtons
+              type={type}
+              handleUpdateClose={handleUpdateClose}
+              isValid={isValid}
+            />
             {type == "Register" && (
               <div className="mt-4 text-start md:text-end flex flex-col md:flex-row justify-between">
-                <Link to="/login-page">
-                  <p className="text-blue-500 hover:underline">
-                    Have an account? Login
-                  </p>
-                </Link>
-                <Link to="/forget-password-page">
-                  <p className="text-blue-500 hover:underline">
-                    Forgot Password?
-                  </p>
-                </Link>
+                <LinkComponent
+                  path="/login-page"
+                  data="Have an account? Login"
+                />
+                <LinkComponent
+                  path="/forget-password-page"
+                  data="Forget Password"
+                />
               </div>
             )}
           </div>

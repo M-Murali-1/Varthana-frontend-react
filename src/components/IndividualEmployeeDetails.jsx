@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import ModelforUpdateAdd from "./ModelforUpdateAdd";
+
 const IndividualEmployeeDetails = ({
   employee,
   LoginUserRole,
@@ -11,6 +12,7 @@ const IndividualEmployeeDetails = ({
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  
   let data = [
     { "Employee ID": `VRT ${employee.id}` },
     { Name: employee.name },
@@ -24,6 +26,7 @@ const IndividualEmployeeDetails = ({
           : employee.address,
     },
   ];
+  
   async function handleDeleteButton() {
     const response = await axios.delete(
       `http://localhost:8080/employee/delete/${employee.id}`,
@@ -33,6 +36,7 @@ const IndividualEmployeeDetails = ({
     );
     handleDelete(employee.id);
   }
+  
   return (
     <div className="bg-gray-200 rounded-lg p-4">
       <div className="flex flex-col gap-2">

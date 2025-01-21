@@ -1,17 +1,16 @@
 import React, { useState } from "react";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
+
 function InputFieldComponent({ data }) {
-  // console.log(data);
-  if (data.type == "password") {
-    data.isPassword = true;
-  }
   const [visible, setVisible] = useState(false);
   function handlePassword(e) {
-    console.log("clikced..!", visible);
-
     data.type = visible ? "password" : "text";
     setVisible(!visible);
+  }
+  
+  if (data.type == "password") {
+    data.isPassword = true;
   }
   return (
     <div className="mb-2">
