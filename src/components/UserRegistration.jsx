@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import InputFieldComponent from "./InputFieldComponent";
 import { useReducer } from "react";
 import { useNavigate } from "react-router-dom";
@@ -92,6 +92,14 @@ function UserRegistration({
   console.log("the form is valid :", isValid);
 
   console.log(details);
+  useEffect(() => {
+    handleErrorChange();
+  }, [details]);
+  function handleErrorChange() {
+    if(registerError!="") {
+      setRegisterError("")
+    }
+  }
   const navigate = useNavigate();
   function handleUpdateClose() {
     handleClose(false);
@@ -138,7 +146,12 @@ function UserRegistration({
           handleAdd(response.data.id);
         }
       } catch (err) {
-        setRegisterError({ message: "There is an error" });
+        console.log(err);
+        if (err.response.data) {
+          setRegisterError(err.response.data);
+        } else {
+          setRegisterError({ message: "There is an error" });
+        }
       }
     };
     postEmployee();
@@ -259,7 +272,7 @@ function UserRegistration({
         type: "handleRoleChange",
         payload: { Role: e.target.value },
       }),
-    options: ["Junior Developer", "Senior Developer","Admin"],
+    options: ["Junior Developer", "Senior Developer", "Admin"],
   };
 
   return (
@@ -285,13 +298,13 @@ function UserRegistration({
             {/* Field for adding Address */}
             <AddressComponent type={type} data={addressInput} />
             {/* Field for selecting the role */}
-            <SelectingRoleComponent type={type} data={selectingRoleInput}/>
-            
+            <SelectingRoleComponent type={type} data={selectingRoleInput} />
+
             {/* Button for submitting the form */}
             <UserRegistrationButtons
               type={type}
               handleUpdateClose={handleUpdateClose}
-              isValid={isValid}
+              isValid={isValid&&registerError==""}
             />
             {type == "Register" && (
               <div className="mt-4 text-start md:text-end flex flex-col md:flex-row justify-between">
