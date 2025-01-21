@@ -10,7 +10,7 @@ function InputFieldComponent({ data }) {
   function handlePassword(e) {
     console.log("clikced..!", visible);
 
-    data.type = visible ? "text" : "password";
+    data.type = visible ? "password" : "text";
     setVisible(!visible);
   }
   return (
