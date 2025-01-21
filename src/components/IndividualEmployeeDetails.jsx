@@ -1,20 +1,16 @@
 import axios from "axios";
 import React, { useState } from "react";
-import Modal from "@mui/material/Modal";
-import SignupPage from "./SignupPage";
-import UserRegistration from "./UserRegistration";
+import ModelforUpdateAdd from "./ModelforUpdateAdd";
 const IndividualEmployeeDetails = ({
   employee,
   LoginUserRole,
   handleDelete,
-  handleUpdate
+  handleUpdate,
 }) => {
   const token = sessionStorage.getItem("token");
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  //console.log("clicked", employee.id);
-
   let data = [
     { "Employee ID": `VRT ${employee.id}` },
     { Name: employee.name },
@@ -23,10 +19,11 @@ const IndividualEmployeeDetails = ({
     { Role: employee.Role },
     {
       Address:
-        (employee.address === null||employee.address ==="") ? "No Address Added" : employee.address,
+        employee.address === null || employee.address === ""
+          ? "No Address Added"
+          : employee.address,
     },
   ];
-  //console.log(data);
   async function handleDeleteButton() {
     const response = await axios.delete(
       `http://localhost:8080/employee/delete/${employee.id}`,
@@ -41,7 +38,6 @@ const IndividualEmployeeDetails = ({
       <div className="flex flex-col gap-2">
         {data.map((element) => {
           let [decoded] = Object.entries(element);
-          //   console.log("the decoded data :", decoded[0]);
           return (
             <div className="flex gap-1" key={decoded[0]}>
               <p className="font-medium">{decoded[0]} : </p>
@@ -50,10 +46,6 @@ const IndividualEmployeeDetails = ({
           );
         })}
       </div>
-      {/* <div className="flex ">
-        <p className="font-bold">Name:</p>
-        <p>{employee.name}</p>
-      </div> */}
       <div className="flex justify-between mt-5 items-baseline">
         {(LoginUserRole == "Admin" || LoginUserRole == "Senior Developer") && (
           <button
@@ -72,18 +64,13 @@ const IndividualEmployeeDetails = ({
           </button>
         )}
       </div>
-      <div>
-        <Modal
-          open={open}
-          onClose={handleClose}
-        >
-             <div className="flex justify-center items-center ">
-          <div className="bg-white rounded-lg p-5 m-10 max-h-[80vh] overflow-y-auto shadow-lg max-w-lg md:max-w-3xl">
-            <UserRegistration handleUpdate={handleUpdate} handleClose={handleClose} data ={employee} type="Update Details"/>
-          </div>
-          </div>
-        </Modal>
-      </div>
+      <ModelforUpdateAdd
+        open={open}
+        handleClose={handleClose}
+        handleUpdate={handleUpdate}
+        type="Update Details"
+        data={employee}
+      />
     </div>
   );
 };

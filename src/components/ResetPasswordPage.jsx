@@ -15,16 +15,12 @@ function ResetPasswordPage() {
     setDetails({ ...details, password: e.target.value });
   const handleConfirmPasswordChange = (e) =>
     setDetails({ ...details, confirm_password: e.target.value });
-  //console.log("the id we got here is :",location.state.id);
-  console.log("the details here are :", details);
-
   const id = sessionStorage.getItem("id");
   console.log("the id here is :", id);
   if (!id) {
     navigate("/forget-password-page");
   }
 
-  console.log("the id here is :", id);
   const inputFieldsData = [
     {
       id: "setpassword",
@@ -55,13 +51,11 @@ function ResetPasswordPage() {
     !confirmPasswordValidation(details.confirm_password, details.password);
   async function handleSubmit(e) {
     e.preventDefault();
-    console.log("the data came here is :", details);
     try {
       let response = await axios.patch(
         `http://localhost:8080/employee/updatepassword/${id}`,
         details
       );
-      console.log(response);
       navigate("/login-page");
     } catch (err) {
       if (err.response) {

@@ -7,20 +7,16 @@ import {
   emailValidation,
   phoneNumberValidation,
 } from "../utils/validations";
-import ResetPasswordPage from "./ResetPasswordPage";
+import LinkComponent from "./LinkComponent";
 function ForgetPasswordPage() {
   const initial = { name: "", phone_number: "", email_id: "" };
   const [details, setDetails] = useState(initial);
   const [error, setError] = useState("");
-  console.log(error == "", error, "the roor", !error);
-
   const isValid =
     !nameValidation(details.name) &&
     !phoneNumberValidation(details.phone_number) &&
     !emailValidation(details.email_id);
   const navigate = useNavigate();
-  console.log("the details that are changing here are :", details);
-
   const handleNameChange = (e) =>
     setDetails({ ...details, name: e.target.value });
   const handlePhNumberChange = (e) =>
@@ -29,33 +25,23 @@ function ForgetPasswordPage() {
     setDetails({ ...details, email_id: e.target.value });
   useEffect(() => {
     setError("");
-    console.log("rendering the useeffect");
   }, [details]);
   const handleReset = async (e) => {
     e.preventDefault();
-    console.log("Now the details are:", details);
     try {
       let response = await axios.post(
         "http://localhost:8080/employee/findone",
         details
       );
-      console.log("the response here is :", response.data.message);
       sessionStorage.setItem("id", response.data.id);
       navigate("/reset-password-page");
-      //<ResetPasswordPage id={response.data.id}/>
     } catch (err) {
       if (err.response) {
         setError(err.response.data.message);
       } else {
         setError(err.message);
       }
-      console.log("the error here is :", error);
-
-      //console.log("the error is :",err.response.data.message||err.message);
-
-      //setError(err.)
     }
-    //navigate("/reset-password-page");
   };
   let inputFieldsData1 = [
     {
@@ -98,51 +84,6 @@ function ForgetPasswordPage() {
           {inputFieldsData1.map((element) => (
             <InputFieldComponent key={element.title} data={element} />
           ))}
-          {/* <div className="mb-2">
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-gray-700 mb-2"
-            >
-              Name:
-            </label>
-            <input
-              id="name"
-              type="text"
-              className="border w-full px-4 py-2 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              placeholder="Enter your name"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700 mb-2"
-            >
-              Email:
-            </label>
-            <input
-              id="email"
-              type="email"
-              className="border w-full px-4 py-2 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              placeholder="Enter your email"
-              required
-            />
-          </div>
-          <div className="mb-2">
-            <label
-              htmlFor="phnumber"
-              className="block text-sm font-medium text-gray-700 mb-2"
-            >
-              Phone Number:
-            </label>
-            <input
-              id="phnumber"
-              type="tel"
-              className="border w-full px-4 py-2 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              placeholder="Enter your mobile number"
-              required
-            />
-          </div> */}
           {error && (
             <p className="mb-2 text-red-500 text-sm text-right">{error}</p>
           )}
@@ -159,13 +100,10 @@ function ForgetPasswordPage() {
             Reset Password Request
           </button>
         </form>
-        <div>
-          <Link to="/signup-page">
-            <p className="text-blue-500 hover:underline">
-              Don't have an account? Sign up.{" "}
-            </p>
-          </Link>
-        </div>
+        <LinkComponent
+          path="/signup-page"
+          data="Don't have an account? Sign up."
+        />
       </div>
     </div>
   );
