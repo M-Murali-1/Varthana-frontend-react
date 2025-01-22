@@ -1,30 +1,31 @@
-import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import LoginUserInfo from "./LoginUserInfo";
-import IndividualEmployeeDetails from "./IndividualEmployeeDetails";
 import { useDispatch, useSelector } from "react-redux";
+
+import LoginUserInfo from "./LoginUserInfo";
 import { getAllEmployees } from "../features/employeeSlice";
+import IndividualEmployeeDetails from "./IndividualEmployeeDetails";
 
 function HomePage() {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  // Getting the token from the session storage.
   const token = sessionStorage.getItem("token");
   if (!token) {
     navigate("/login-page");
   }
 
-  const [employees, setEmployees] = useState({});
-  const [error, setError] = useState(""); // Error state for handling errors
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  const [deleteEmployee, setDeleteEmployee] = useState(null);
-  const [updateEmployee, setUpdateEmployee] = useState(null);
-  const [addEmployee, setAddEmployee] = useState(null);
+  const { loginEmployee, otherEmployees } = useSelector(
+    (state) => state.employee
+  );
 
+  // Function for the purpose of fetching the data and storing it inside the store.
   const getDetails = async () => {
     setLoading(true);
     setError("");
-
     try {
       const response = await axios.get(
         "http://localhost:8080/employee/getall",
@@ -34,13 +35,9 @@ function HomePage() {
           },
         }
       );
-      setEmployees(response.data);
-      //console.log("the data inside the Homepage:", response.data);
-      dispatch(getAllEmployees(response.data));
+     dispatch(getAllEmployees(response.data));
     } catch (err) {
-      // console.log("the error is :",err);
-
-      setError(
+     setError(
         err.response.data.message || err.message || "Error fetching employees"
       );
     } finally {
@@ -52,15 +49,6 @@ function HomePage() {
     getDetails();
   }, []);
 
-  const { loginEmployee, otherEmployees } = useSelector(
-    (state) => state.employee
-  );
-  console.log(
-    "the data in the redux store is :",
-    loginEmployee,
-    otherEmployees
-  );
-
   if (loading) {
     return <h1>Loading..!</h1>;
   }
@@ -70,8 +58,8 @@ function HomePage() {
       <div className="text-red-500">Error fetching employees: {error}</div>
     );
   }
-  console.log("the other employees here are :", Array.isArray(otherEmployees));
-
+  
+  // Sortng the employees by their ID's.
   const Employees = [...otherEmployees].sort((a, b) => a.id - b.id);
 
   return (

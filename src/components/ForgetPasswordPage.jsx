@@ -1,31 +1,41 @@
-import { useEffect, useState } from "react";
-import InputFieldComponent from "./InputFieldComponent";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import InputFieldComponent from "./InputFieldComponent";
+import LinkComponent from "./LinkComponent";
 import {
   nameValidation,
   emailValidation,
   phoneNumberValidation,
 } from "../utils/validations";
-import LinkComponent from "./LinkComponent";
+
 function ForgetPasswordPage() {
   const initial = { name: "", phone_number: "", email_id: "" };
+  const navigate = useNavigate();
+
   const [details, setDetails] = useState(initial);
   const [error, setError] = useState("");
-  const isValid =
-    !nameValidation(details.name) &&
-    !phoneNumberValidation(details.phone_number) &&
-    !emailValidation(details.email_id);
-  const navigate = useNavigate();
+
+  // Functions for handling the input field changes.
   const handleNameChange = (e) =>
     setDetails({ ...details, name: e.target.value });
   const handlePhNumberChange = (e) =>
     setDetails({ ...details, phone_number: e.target.value });
   const handleEmailChange = (e) =>
     setDetails({ ...details, email_id: e.target.value });
+
+  // Logic for the validation of the input.
+  const isValid =
+    !nameValidation(details.name) &&
+    !phoneNumberValidation(details.phone_number) &&
+    !emailValidation(details.email_id);
+
   useEffect(() => {
     setError("");
   }, [details]);
+
+  // Logic for the purpose of reseting the password.
   const handleReset = async (e) => {
     e.preventDefault();
     try {
@@ -43,7 +53,9 @@ function ForgetPasswordPage() {
       }
     }
   };
-  let inputFieldsData1 = [
+
+  // Data required for building the input fields.
+  const inputFieldsData1 = [
     {
       id: "name",
       title: "Name",

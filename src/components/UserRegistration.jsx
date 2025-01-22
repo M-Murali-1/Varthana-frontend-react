@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import InputFieldComponent from "./InputFieldComponent";
-import { Link } from "react-router-dom";
 import { useReducer } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import LinkComponent from "./LinkComponent";
 import { updateEmployee, addNewEmployee } from "../features/employeeSlice";
+import SelectingRoleComponent from "./selectingRoleComponent";
+import UserRegistrationButtons from "./UserRegistrationButtons";
+import AddressComponent from "./AddressComponent";
 import {
   confirmPasswordValidation,
   emailValidation,
@@ -262,6 +264,28 @@ function UserRegistration({ data = {}, type, handleClose = () => {} }) {
       ),
     },
   ];
+  let selectingRoleInput = {
+    id: "role",
+    value: details.Role,
+    handleChange: (e) =>
+      dispatch({
+        type: "handleRoleChange",
+        payload: { Role: e.target.value },
+      }),
+    options: ["Junior Developer", "Senior Developer", "Admin"],
+  };
+  let addressInput = {
+    id: "address",
+    title: "Add Address",
+    placeholder: "Add Address",
+    handleChange: (e) =>
+      dispatch({
+        type: "handleAddressChange",
+        payload: { address: e.target.value },
+      }),
+    value: details.address,
+  };
+
   // if (type == "Update Details") {
   //   inputFieldsData2[0] = inputFieldsData1.pop();
   // }
@@ -271,99 +295,34 @@ function UserRegistration({ data = {}, type, handleClose = () => {} }) {
       <h2 className="text-center text-2xl font-bold mb-6">{type}</h2>
       <form onSubmit={handleRegister}>
         <div className="flex gap-0 md:gap-10 flex-col md:flex-row">
-          {/* Set 1 */}
+          
+          {/* Field for name,username,phone number,email */}
           <div className="w-full md:w-1/2">
-            {/* Field for name,username,phone number,email */}
             {inputFieldsData1.map((element) => (
               <InputFieldComponent key={element.title} data={element} />
             ))}
           </div>
 
-          {/* Set 2 */}
+          {/* Field for password and confirm password */}
           <div className="w-full md:w-1/2">
-            {/* Field for password and confirm password */}
             {type != "Update Details" &&
               inputFieldsData2.map((element) => (
                 <InputFieldComponent key={element.title} data={element} />
               ))}
-            {/* Foeld for adding Address */}
-            {type === "Update Details" && (
-              <div className="mb-2">
-                <label
-                  htmlFor="role"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  Add Address
-                </label>
-                <textarea
-                  className="border w-full px-4 py-2 rounded-md"
-                  value={details.address}
-                  onChange={(e) =>
-                    dispatch({
-                      type: "handleAddressChange",
-                      payload: { address: e.target.value },
-                    })
-                  }
-                  rows="5"
-                />
-              </div>
-            )}
+
+            {/* Field for adding Address */}
+            <AddressComponent type={type} data={addressInput} />
+
             {/* Field for selecting the role */}
-            <div className="mb-2">
-              <label
-                htmlFor="role"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
-                {type != "Update Details" ? "Select Your Role" : "Update Role"}
-              </label>
-              <select
-                id="role"
-                value={details.Role}
-                onChange={(e) =>
-                  dispatch({
-                    type: "handleRoleChange",
-                    payload: { Role: e.target.value },
-                  })
-                }
-                className="border w-full px-4 py-2 rounded-md "
-              >
-                <option value="Junior Developer">Junior Developer</option>
-                <option value="Senior Developer">Senior Developer</option>
-                <option value="Admin">Admin</option>
-              </select>
-            </div>
+            <SelectingRoleComponent type={type} data={selectingRoleInput} />
+
             {/* Button for submitting the form */}
-            <div
-              className={`${
-                type == "Update Details" ? "flex justify-between" : ""
-              }`}
-            >
-              {type === "Update Details" && (
-                <button
-                  className={`bg-red-500  ${
-                    type == "Update Details" ? "w-2/6" : "w-full"
-                  } text-white w-full py-2 mt-2 rounded-md`}
-                  onClick={handleUpdateClose}
-                >
-                  Close
-                </button>
-              )}
-              <button
-                type="submit"
-                className={`bg-blue-500 text-white ${
-                  type == "Update Details" ? "w-2/5" : "w-full"
-                } py-2 mt-2 rounded-md ${
-                  isValid
-                    ? "hover:bg-blue-600"
-                    : "opacity-50 cursor-not-allowed"
-                }`}
-                disabled={!isValid}
-              >
-                {type == "Register" && "Submit"}
-                {type == "Update Details" && "Update"}
-                {type == "Add New Employee" && "Add Employee"}
-              </button>
-            </div>
+            <UserRegistrationButtons
+              type={type}
+              handleUpdateClose={handleUpdateClose}
+              isValid={isValid}
+            />
+
             {type == "Register" && (
               <div className="mt-4 text-start md:text-end flex flex-col md:flex-row justify-between">
                 <LinkComponent

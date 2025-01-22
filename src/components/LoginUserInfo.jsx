@@ -1,23 +1,33 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ModelforUpdateAdd from "./ModelforUpdateAdd";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteAllEmployees } from "../features/employeeSlice";
-function LoginUserInfo() {
-  const dispatch = useDispatch();
-const {employee} = useSelector(state=>({employee:state.employee.loginEmployee}));
-console.log("the login employee is :",employee);
 
+import ModelforUpdateAdd from "./ModelforUpdateAdd";
+import { deleteAllEmployees } from "../features/employeeSlice";
+
+function LoginUserInfo() {
+
+  // Methods for handling the actions on the store and redirections.
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  
+  // Getting the Login user info.
+  const { employee } = useSelector((state) => ({
+    employee: state.employee.loginEmployee,
+  }));
+
+  // State and the modal for handling the modal 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  // Logic for handling the logout of the Employee.!
   function handleLogoutChange() {
     sessionStorage.removeItem("token");
     dispatch(deleteAllEmployees());
     navigate("/login-page");
   }
-  function handleModelOpen() {}
+  
   return (
     <div className="flex p-5 bg-gray-100 justify-between items-baseline">
       <p className="text-gray-800 font-semibold">

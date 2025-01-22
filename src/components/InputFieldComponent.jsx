@@ -1,19 +1,23 @@
-import React, { useState } from "react";
+import { useState } from "react";
+
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 function InputFieldComponent({ data }) {
-  // console.log(data);
+  
+  // Logic for the toggling the password visiblility..!
+  const [visible, setVisible] = useState(false);
   if (data.type == "password") {
     data.isPassword = true;
   }
-  const [visible, setVisible] = useState(false);
   function handlePassword(e) {
     console.log("clikced..!", visible);
-
     data.type = visible ? "password" : "text";
     setVisible(!visible);
   }
+
   return (
+    
+    // Logic for the creating the Single Input field component 
     <div className="mb-2">
       <label
         htmlFor={data.id}
@@ -31,6 +35,8 @@ function InputFieldComponent({ data }) {
           onChange={(e) => data.handleChange(e)}
           required={data.required}
         />
+
+        {/* Handling the password visiblilty..! */}
         {data.isPassword && (
           <div
             className="absolute bottom-2 right-2 opacity-30"
@@ -41,6 +47,8 @@ function InputFieldComponent({ data }) {
           </div>
         )}
       </div>
+
+      {/* Handling the input validation errors for the input fields..! */}
       {data.error && data.value != "" && (
         <p className="text-xs text-end mt-1 text-red-500">{data.error}</p>
       )}
