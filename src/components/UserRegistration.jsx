@@ -4,7 +4,8 @@ import { Link } from "react-router-dom";
 import { useReducer } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { updateEmployee,addNewEmployee } from "../features/employeeSlice";
+import LinkComponent from "./LinkComponent";
+import { updateEmployee, addNewEmployee } from "../features/employeeSlice";
 import {
   confirmPasswordValidation,
   emailValidation,
@@ -46,13 +47,7 @@ const reducer = (state, action) => {
   }
 };
 
-function UserRegistration({
-  data = "",
-  type = "",
-  handleUpdate = () => {},
-  handleClose = () => {},
-  handleAdd = () => {},
-}) {
+function UserRegistration({ data = {}, type, handleClose = () => {} }) {
   const [registerError, setRegisterError] = useState({ type: "", message: "" });
   console.log(Object.keys(initialState));
   const initailStateToUse =
@@ -75,7 +70,7 @@ function UserRegistration({
   }
 
   console.log("the data for the updating purpose is :", initialState);
-  const dispatchEmployee= useDispatch();
+  const dispatchEmployee = useDispatch();
   //console.log("the details while updating are  :", details);
 
   const isValid =
@@ -93,7 +88,7 @@ function UserRegistration({
   console.log(details);
   const navigate = useNavigate();
   function handleUpdateClose() {
-    handleClose(false);
+    handleClose();
     dispatch({ type: "reset" });
   }
   function handleRegister(e) {
@@ -117,7 +112,7 @@ function UserRegistration({
           navigate("/home-page");
         } else if (type == "Update Details") {
           console.log(data.id);
-          handleUpdate(null);
+          // handleUpdate(null);
           const token = sessionStorage.getItem("token");
           let response = await axios.patch(
             `http://localhost:8080/employee/update/${data.id}`,
@@ -130,9 +125,9 @@ function UserRegistration({
           );
           console.log("the response is :", response.data.Data);
 
-          handleClose(false);
+          handleClose();
           dispatchEmployee(updateEmployee(response.data.Data));
-          handleUpdate(data.id);
+          // handleUpdate(data.id);
         } else if (type == "Add New Employee") {
           const token = sessionStorage.getItem("token");
           let response = await axios.post(
@@ -144,23 +139,28 @@ function UserRegistration({
               },
             }
           );
-          console.log("the response here is after inserting :", response.data.newEmployee);
+          console.log(
+            "the response here is after inserting :",
+            response.data.newEmployee
+          );
           handleClose();
-           dispatchEmployee(addNewEmployee(response.data.newEmployee)) 
-          handleAdd(response.data.id);
+          dispatchEmployee(addNewEmployee(response.data.newEmployee));
+          // handleAdd(response.data.id);
         }
       } catch (err) {
-        console.log("the error occured here is :",err);
+        console.log("the error occured here is :", err);
         // if (err.response.data.type === "emailError") {
         //   emailIdError = err.response.data.message;
         // } else if (err.response.data.type === "PhoneNoError") {
         //   phoneNoError = err.response.data.message;
         // }
-        if(!err.response.data) {
-          setRegisterError({ message: "There is an error",error:err.message })
-        }
-        else{
-          setRegisterError(err.response.data)
+        if (!err.response.data) {
+          setRegisterError({
+            message: "There is an error",
+            error: err.message,
+          });
+        } else {
+          setRegisterError(err.response.data);
         }
       }
     };
@@ -366,16 +366,14 @@ function UserRegistration({
             </div>
             {type == "Register" && (
               <div className="mt-4 text-start md:text-end flex flex-col md:flex-row justify-between">
-                <Link to="/login-page">
-                  <p className="text-blue-500 hover:underline">
-                    Have an account? Login
-                  </p>
-                </Link>
-                <Link to="/forget-password-page">
-                  <p className="text-blue-500 hover:underline">
-                    Forgot Password?
-                  </p>
-                </Link>
+                <LinkComponent
+                  path="/login-page"
+                  data="Have an account? Login"
+                />
+                <LinkComponent
+                  path="/forget-password-page"
+                  data="Forget Password"
+                />
               </div>
             )}
           </div>

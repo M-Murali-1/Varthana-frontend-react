@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import InputFieldComponent from "./InputFieldComponent";
+import LinkComponent from "./LinkComponent";
 import axios from "axios";
 import {
   passwordValidation,
@@ -89,13 +90,10 @@ function ResetPasswordPage() {
             Reset Password
           </button>
         </form>
-        <div>
-          <Link to="/login-page">
-            <p className={`text-blue-500 hover:underline mt-2 `}>
-              Have an account? Login
-            </p>
-          </Link>
-        </div>
+        <LinkComponent
+          path="/login-page"
+          data="Have an account? Login"
+        />
       </div>
     </div>
   );

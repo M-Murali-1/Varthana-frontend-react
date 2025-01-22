@@ -15,7 +15,7 @@ function HomePage() {
   }
 
   const [employees, setEmployees] = useState({});
-  const [error, setError] = useState("");  // Error state for handling errors
+  const [error, setError] = useState(""); // Error state for handling errors
   const [loading, setLoading] = useState(true);
   const [deleteEmployee, setDeleteEmployee] = useState(null);
   const [updateEmployee, setUpdateEmployee] = useState(null);
@@ -23,7 +23,7 @@ function HomePage() {
 
   const getDetails = async () => {
     setLoading(true);
-    setError(""); 
+    setError("");
 
     try {
       const response = await axios.get(
@@ -36,11 +36,13 @@ function HomePage() {
       );
       setEmployees(response.data);
       //console.log("the data inside the Homepage:", response.data);
-      dispatch(getAllEmployees(response.data));  
+      dispatch(getAllEmployees(response.data));
     } catch (err) {
-     // console.log("the error is :",err);
-      
-      setError(err.response.data.message||err.message || "Error fetching employees");
+      // console.log("the error is :",err);
+
+      setError(
+        err.response.data.message || err.message || "Error fetching employees"
+      );
     } finally {
       setLoading(false);
     }
@@ -53,7 +55,11 @@ function HomePage() {
   const { loginEmployee, otherEmployees } = useSelector(
     (state) => state.employee
   );
-  console.log("the data in the redux store is :", loginEmployee, otherEmployees);
+  console.log(
+    "the data in the redux store is :",
+    loginEmployee,
+    otherEmployees
+  );
 
   if (loading) {
     return <h1>Loading..!</h1>;
@@ -61,30 +67,19 @@ function HomePage() {
 
   if (error) {
     return (
-      <div className="text-red-500">
-        Error fetching employees: {error}
-      </div>
+      <div className="text-red-500">Error fetching employees: {error}</div>
     );
   }
-  console.log("the other employees here are :",Array.isArray(otherEmployees));
-  
+  console.log("the other employees here are :", Array.isArray(otherEmployees));
+
   const Employees = [...otherEmployees].sort((a, b) => a.id - b.id);
 
   return (
     <div className="min-h-screen">
-      <LoginUserInfo
-        employee={loginEmployee}
-        handleAdd={setAddEmployee}
-      />
+      <LoginUserInfo employee={loginEmployee} />
       <div className="grid min-w-md lg:grid-cols-3 grid-cols-1 gap-5 p-5">
-        {Object.values(otherEmployees).map((employee) => (
-          <IndividualEmployeeDetails
-            key={employee.id}  // Don't forget the `key` prop for lists!
-            employee={employee}
-            LoginUserRole={loginEmployee.Role}
-            handleDelete={setDeleteEmployee}
-            handleUpdate={setUpdateEmployee}
-          />
+        {Object.values(Employees).map((employee) => (
+          <IndividualEmployeeDetails key={employee.id} employee={employee} />
         ))}
       </div>
     </div>

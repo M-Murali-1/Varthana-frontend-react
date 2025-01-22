@@ -1,14 +1,14 @@
 import axios from "axios";
 import React, { useState } from "react";
 import ModelforUpdateAdd from "./ModelforUpdateAdd";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { deleteEmployee } from "../features/employeeSlice";
-const IndividualEmployeeDetails = ({
-  employee,
-  LoginUserRole,
-  handleDelete,
-  handleUpdate,
-}) => {
+const IndividualEmployeeDetails = ({ employee }) => {
+  const { LoginUserRole } = useSelector((state) => ({
+    LoginUserRole: state.employee.loginEmployee.Role,
+  }));
+  console.log("the role of the employee is :", LoginUserRole);
+
   const token = sessionStorage.getItem("token");
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
@@ -34,9 +34,9 @@ const IndividualEmployeeDetails = ({
         headers: { Authorization: `${token}` },
       }
     );
-    console.log("the response after deleting:",response.data.id);
+    console.log("the response after deleting:", response.data.id);
     dispatch(deleteEmployee(response.data.id));
-    handleDelete(employee.id);
+    // handleDelete(employee.id);
   }
   return (
     <div className="bg-gray-200 rounded-lg p-4">
@@ -72,7 +72,7 @@ const IndividualEmployeeDetails = ({
       <ModelforUpdateAdd
         open={open}
         handleClose={handleClose}
-        handleUpdate={handleUpdate}
+        //handleUpdate={handleUpdate}
         type="Update Details"
         data={employee}
       />

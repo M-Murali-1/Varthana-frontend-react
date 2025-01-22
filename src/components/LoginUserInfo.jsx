@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Modal from "@mui/material/Modal";
-import UserRegistration from "./UserRegistration";
 import ModelforUpdateAdd from "./ModelforUpdateAdd";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { deleteAllEmployees } from "../features/employeeSlice";
-function LoginUserInfo({ employee, handleAdd }) {
+function LoginUserInfo() {
   const dispatch = useDispatch();
+const {employee} = useSelector(state=>({employee:state.employee.loginEmployee}));
+console.log("the login employee is :",employee);
 
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -42,7 +42,6 @@ function LoginUserInfo({ employee, handleAdd }) {
       <ModelforUpdateAdd
         open={open}
         handleClose={handleClose}
-        handleAdd={handleAdd}
         type="Add New Employee"
         data={employee}
       />
