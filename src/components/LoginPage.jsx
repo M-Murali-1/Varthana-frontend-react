@@ -14,10 +14,12 @@ function LoginPage() {
     e.preventDefault();
     try {
       setError("");
+      console.log(loginData,"this is the login data");
       const response = await axios.post(
         "http://localhost:8080/auth/login",
         loginData
       );
+      
       setLoginData(initial);
       sessionStorage.setItem("token", response.data.token);
       navigate("/home-page");
