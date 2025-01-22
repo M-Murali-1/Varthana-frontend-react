@@ -3,13 +3,16 @@ import axios from "axios";
 import InputFieldComponent from "./InputFieldComponent";
 import LinkComponent from "./LinkComponent";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { emailValidation, passwordValidation } from "../utils/validations";
+import { useEffect } from "react";
 function LoginPage() {
   const navigate = useNavigate();
   const initial = { email_id: "", password: "" };
   const [loginData, setLoginData] = useState(initial);
   const [error, setError] = useState("");
-
+  const dispatch = useDispatch();
+ 
   async function handleLoginPage(e) {
     e.preventDefault();
     try {

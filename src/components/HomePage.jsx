@@ -3,12 +3,14 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import LoginUserInfo from "./LoginUserInfo";
 import IndividualEmployeeDetails from "./IndividualEmployeeDetails";
+import { useSelector } from "react-redux";
 function HomePage() {
   const navigate = useNavigate();
   const token = sessionStorage.getItem("token");
   if (!token) {
     navigate("/login-page");
   }
+  
   const [employees, setEmployees] = useState({});
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
@@ -29,6 +31,8 @@ function HomePage() {
         }
       );
       setEmployees(response.data);
+      console.log("the data inside the Homepage:",response.data);
+      
     } catch (error) {
       setError(error);
     } finally {
