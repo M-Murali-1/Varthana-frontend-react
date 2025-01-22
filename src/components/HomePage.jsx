@@ -3,23 +3,27 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import LoginUserInfo from "./LoginUserInfo";
 import IndividualEmployeeDetails from "./IndividualEmployeeDetails";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllEmployees } from "../features/employeeSlice";
+
 function HomePage() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const token = sessionStorage.getItem("token");
   if (!token) {
     navigate("/login-page");
   }
-  
+
   const [employees, setEmployees] = useState({});
-  const [error, setError] = useState("");
+  const [error, setError] = useState("");  // Error state for handling errors
   const [loading, setLoading] = useState(true);
   const [deleteEmployee, setDeleteEmployee] = useState(null);
   const [updateEmployee, setUpdateEmployee] = useState(null);
   const [addEmployee, setAddEmployee] = useState(null);
+
   const getDetails = async () => {
     setLoading(true);
-    setError("");
+    setError(""); 
 
     try {
       const response = await axios.get(
@@ -31,10 +35,12 @@ function HomePage() {
         }
       );
       setEmployees(response.data);
-      console.log("the data inside the Homepage:",response.data);
+      //console.log("the data inside the Homepage:", response.data);
+      dispatch(getAllEmployees(response.data));  
+    } catch (err) {
+     // console.log("the error is :",err);
       
-    } catch (error) {
-      setError(error);
+      setError(err.response.data.message||err.message || "Error fetching employees");
     } finally {
       setLoading(false);
     }
@@ -42,7 +48,12 @@ function HomePage() {
 
   useEffect(() => {
     getDetails();
-  }, [deleteEmployee, updateEmployee, addEmployee]);
+  }, []);
+
+  const { loginEmployee, otherEmployees } = useSelector(
+    (state) => state.employee
+  );
+  console.log("the data in the redux store is :", loginEmployee, otherEmployees);
 
   if (loading) {
     return <h1>Loading..!</h1>;
@@ -51,23 +62,26 @@ function HomePage() {
   if (error) {
     return (
       <div className="text-red-500">
-        Error fetching employees:
-        {error}
+        Error fetching employees: {error}
       </div>
     );
   }
-  employees.otherEmployees.sort((a, b) => a.id - b.id);
+  console.log("the other employees here are :",Array.isArray(otherEmployees));
+  
+  const Employees = [...otherEmployees].sort((a, b) => a.id - b.id);
+
   return (
-    <div className="min-h-screen  ">
+    <div className="min-h-screen">
       <LoginUserInfo
-        employee={employees.loginEmployee}
+        employee={loginEmployee}
         handleAdd={setAddEmployee}
       />
-      <div className="grid min-w-md  lg:grid-cols-3 grid-cols-1  gap-5 p-5">
-        {Object.values(employees.otherEmployees).map((employee) => (
+      <div className="grid min-w-md lg:grid-cols-3 grid-cols-1 gap-5 p-5">
+        {Object.values(otherEmployees).map((employee) => (
           <IndividualEmployeeDetails
+            key={employee.id}  // Don't forget the `key` prop for lists!
             employee={employee}
-            LoginUserRole={employees.loginEmployee.Role}
+            LoginUserRole={loginEmployee.Role}
             handleDelete={setDeleteEmployee}
             handleUpdate={setUpdateEmployee}
           />

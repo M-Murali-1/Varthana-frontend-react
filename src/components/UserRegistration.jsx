@@ -3,6 +3,8 @@ import InputFieldComponent from "./InputFieldComponent";
 import { Link } from "react-router-dom";
 import { useReducer } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { updateEmployee,addNewEmployee } from "../features/employeeSlice";
 import {
   confirmPasswordValidation,
   emailValidation,
@@ -73,7 +75,7 @@ function UserRegistration({
   }
 
   console.log("the data for the updating purpose is :", initialState);
-
+  const dispatchEmployee= useDispatch();
   //console.log("the details while updating are  :", details);
 
   const isValid =
@@ -127,7 +129,9 @@ function UserRegistration({
             }
           );
           console.log("the response is :", response.data.Data);
+
           handleClose(false);
+          dispatchEmployee(updateEmployee(response.data.Data));
           handleUpdate(data.id);
         } else if (type == "Add New Employee") {
           const token = sessionStorage.getItem("token");
@@ -140,18 +144,24 @@ function UserRegistration({
               },
             }
           );
-          console.log("the response here is after inserting :", response);
+          console.log("the response here is after inserting :", response.data.newEmployee);
           handleClose();
+           dispatchEmployee(addNewEmployee(response.data.newEmployee)) 
           handleAdd(response.data.id);
         }
       } catch (err) {
-        console.log("the error occured here is :");
+        console.log("the error occured here is :",err);
         // if (err.response.data.type === "emailError") {
         //   emailIdError = err.response.data.message;
         // } else if (err.response.data.type === "PhoneNoError") {
         //   phoneNoError = err.response.data.message;
         // }
-        setRegisterError({ message: "There is an error",error:err.message });
+        if(!err.response.data) {
+          setRegisterError({ message: "There is an error",error:err.message })
+        }
+        else{
+          setRegisterError(err.response.data)
+        }
       }
     };
     postEmployee();

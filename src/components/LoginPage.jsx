@@ -8,21 +8,30 @@ import { emailValidation, passwordValidation } from "../utils/validations";
 import { useEffect } from "react";
 function LoginPage() {
   const navigate = useNavigate();
+  const { loginEmployee, otherEmployees } = useSelector(
+    (state) => state.employee
+  );
+  console.log(
+    "the data in the redux store is in the login page:",
+    loginEmployee,
+    otherEmployees
+  );
+
   const initial = { email_id: "", password: "" };
   const [loginData, setLoginData] = useState(initial);
   const [error, setError] = useState("");
   const dispatch = useDispatch();
- 
+
   async function handleLoginPage(e) {
     e.preventDefault();
     try {
       setError("");
-      console.log(loginData,"this is the login data");
+      console.log(loginData, "this is the login data");
       const response = await axios.post(
         "http://localhost:8080/auth/login",
         loginData
       );
-      
+
       setLoginData(initial);
       sessionStorage.setItem("token", response.data.token);
       navigate("/home-page");

@@ -1,6 +1,8 @@
 import axios from "axios";
 import React, { useState } from "react";
 import ModelforUpdateAdd from "./ModelforUpdateAdd";
+import { useDispatch } from "react-redux";
+import { deleteEmployee } from "../features/employeeSlice";
 const IndividualEmployeeDetails = ({
   employee,
   LoginUserRole,
@@ -8,6 +10,7 @@ const IndividualEmployeeDetails = ({
   handleUpdate,
 }) => {
   const token = sessionStorage.getItem("token");
+  const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -31,8 +34,8 @@ const IndividualEmployeeDetails = ({
         headers: { Authorization: `${token}` },
       }
     );
-    console.log("the response after deleting:",response);
-    
+    console.log("the response after deleting:",response.data.id);
+    dispatch(deleteEmployee(response.data.id));
     handleDelete(employee.id);
   }
   return (
