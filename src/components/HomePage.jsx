@@ -43,16 +43,15 @@ function HomePage() {
     } finally {
       setLoading(false);
     }
+
+    useEffect(() => {
+      getDetails();
+    }, []);
   };
   const { otherEmployees } = useSelector((state) => ({
-    otherEmployees:state.employee.otherEmployees
+    otherEmployees: state.employee.otherEmployees,
   }));
-  console.log("the data here is:",otherEmployees);
-  
-  useEffect(() => {
-    getDetails();
-  }, []);
-
+  console.log("the data here is:", otherEmployees);
   if (loading) {
     return <h1>Loading..!</h1>;
   }
