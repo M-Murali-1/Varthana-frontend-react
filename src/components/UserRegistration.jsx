@@ -126,7 +126,7 @@ function UserRegistration({
               },
             }
           );
-          console.log("the response is :", response);
+          console.log("the response is :", response.data.Data);
           handleClose(false);
           handleUpdate(data.id);
         } else if (type == "Add New Employee") {

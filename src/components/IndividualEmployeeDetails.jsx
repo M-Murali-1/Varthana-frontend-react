@@ -31,6 +31,8 @@ const IndividualEmployeeDetails = ({
         headers: { Authorization: `${token}` },
       }
     );
+    console.log("the response after deleting:",response);
+    
     handleDelete(employee.id);
   }
   return (
