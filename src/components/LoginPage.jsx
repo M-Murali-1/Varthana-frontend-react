@@ -3,6 +3,7 @@ import axios from "axios";
 import InputFieldComponent from "./InputFieldComponent";
 import LinkComponent from "./LinkComponent";
 import { useNavigate } from "react-router-dom";
+import { emailValidation, passwordValidation } from "../utils/validations";
 function LoginPage() {
   const navigate = useNavigate();
   const initial = { email_id: "", password: "" };
@@ -40,6 +41,7 @@ function LoginPage() {
       handleChange: handleEmailChange,
       value: loginData.email_id,
       required: true,
+      error: emailValidation(loginData.email_id),
     },
     {
       id: "password",
@@ -49,6 +51,7 @@ function LoginPage() {
       handleChange: handlePasswordChange,
       value: loginData.password,
       required: true,
+      error: passwordValidation(loginData.password),
     },
   ];
   return (
