@@ -151,7 +151,7 @@ function UserRegistration({
         // } else if (err.response.data.type === "PhoneNoError") {
         //   phoneNoError = err.response.data.message;
         // }
-        setRegisterError({ message: "There is an error" });
+        setRegisterError({ message: "There is an error",error:err.message });
       }
     };
     postEmployee();
