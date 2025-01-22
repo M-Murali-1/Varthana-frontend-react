@@ -3,9 +3,14 @@ import axios from "axios";
 import InputFieldComponent from "./InputFieldComponent";
 import LinkComponent from "./LinkComponent";
 import { useNavigate } from "react-router-dom";
-
+import { useDispatch, useSelector } from "react-redux";
+import { fetchEmployees } from "../features/employeeSlice";
 function LoginPage() {
+  const {employeeError} = useSelector(state=>state.employee.employeeError)
+  console.log("the error is:",employeeError);
+  
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const initial = { email_id: "", password: "" };
   const [loginData, setLoginData] = useState(initial);
   const [error, setError] = useState("");
@@ -18,12 +23,14 @@ function LoginPage() {
         "http://localhost:8080/auth/login",
         loginData
       );
+      
       setLoginData(initial);
       sessionStorage.setItem("token", response.data.token);
       navigate("/home-page");
     } catch (err) {
       setError(err.response.data.message);
     }
+    //dispatch(fetchEmployees(loginData));
   }
   
   function handleEmailChange(e) {

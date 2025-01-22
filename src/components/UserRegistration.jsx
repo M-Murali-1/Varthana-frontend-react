@@ -14,6 +14,8 @@ import {
 import axios from "axios";
 import LinkComponent from "./LinkComponent";
 import AddressComponent from "./AddressComponent";
+import { useDispatch, useSelector } from "react-redux";
+import { addEmployee } from "../features/employeeSlice";
 let initialState = {
   name: "",
   username: "",
@@ -105,6 +107,12 @@ function UserRegistration({
     handleClose(false);
     dispatch({ type: "reset" });
   }
+  const dispatchEmployee = useDispatch();
+  const { employeeData } = useSelector((state) => ({
+      employeeData:state.employee.employeeData
+    }));
+    console.log("the data here is in registration is:",employeeData);
+    
   function handleRegister(e) {
     e.preventDefault();
     const postEmployee = async () => {
@@ -129,6 +137,8 @@ function UserRegistration({
               },
             }
           );
+          console.log(response);
+          
           handleClose(false);
           handleUpdate(data.id);
         } else if (type == "Add New Employee") {
@@ -141,7 +151,10 @@ function UserRegistration({
                 Authorization: `${token}`,
               },
             }
+            
           );
+          console.log("the response here is :",response);
+            dispatchEmployee(addEmployee(response.data.newEmployee));
           handleClose();
           handleAdd(response.data.id);
         }
