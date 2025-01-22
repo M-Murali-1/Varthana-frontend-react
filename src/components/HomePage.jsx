@@ -44,14 +44,14 @@ function HomePage() {
       setLoading(false);
     }
   };
-  const { employeeData } = useSelector((state) => ({
-    employeeData:state.employee.employeeData
+  const { otherEmployees } = useSelector((state) => ({
+    otherEmployees:state.employee.otherEmployees
   }));
-  console.log("the data here is:",employeeData);
+  console.log("the data here is:",otherEmployees);
   
   useEffect(() => {
     getDetails();
-  }, [deleteEmployee, updateEmployee, addEmployee]);
+  }, []);
 
   if (loading) {
     return <h1>Loading..!</h1>;

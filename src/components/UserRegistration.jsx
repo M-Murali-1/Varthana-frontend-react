@@ -15,7 +15,7 @@ import axios from "axios";
 import LinkComponent from "./LinkComponent";
 import AddressComponent from "./AddressComponent";
 import { useDispatch, useSelector } from "react-redux";
-import { addEmployee } from "../features/employeeSlice";
+import { addEmployee, updateEmployee } from "../features/employeeSlice";
 let initialState = {
   name: "",
   username: "",
@@ -98,8 +98,8 @@ function UserRegistration({
     handleErrorChange();
   }, [details]);
   function handleErrorChange() {
-    if(registerError!="") {
-      setRegisterError("")
+    if (registerError != "") {
+      setRegisterError("");
     }
   }
   const navigate = useNavigate();
@@ -109,10 +109,10 @@ function UserRegistration({
   }
   const dispatchEmployee = useDispatch();
   const { employeeData } = useSelector((state) => ({
-      employeeData:state.employee.employeeData
-    }));
-    console.log("the data here is in registration is:",employeeData);
-    
+    employeeData: state.employee.employeeData,
+  }));
+  console.log("the data here is in registration is:", employeeData);
+
   function handleRegister(e) {
     e.preventDefault();
     const postEmployee = async () => {
@@ -137,8 +137,8 @@ function UserRegistration({
               },
             }
           );
-          console.log(response);
-          
+          console.log("the response after updating:", response.data.Data);
+          dispatchEmployee(updateEmployee(response.data.Data));
           handleClose(false);
           handleUpdate(data.id);
         } else if (type == "Add New Employee") {
@@ -151,10 +151,9 @@ function UserRegistration({
                 Authorization: `${token}`,
               },
             }
-            
           );
-          console.log("the response here is :",response);
-            dispatchEmployee(addEmployee(response.data.newEmployee));
+          console.log("the response here is :", response);
+          dispatchEmployee(addEmployee(response.data.newEmployee));
           handleClose();
           handleAdd(response.data.id);
         }
@@ -317,7 +316,7 @@ function UserRegistration({
             <UserRegistrationButtons
               type={type}
               handleUpdateClose={handleUpdateClose}
-              isValid={isValid&&registerError==""}
+              isValid={isValid && registerError == ""}
             />
             {type == "Register" && (
               <div className="mt-4 text-start md:text-end flex flex-col md:flex-row justify-between">

@@ -4,7 +4,6 @@ import InputFieldComponent from "./InputFieldComponent";
 import LinkComponent from "./LinkComponent";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchEmployees } from "../features/employeeSlice";
 function LoginPage() {
   const {employeeError} = useSelector(state=>state.employee.employeeError)
   console.log("the error is:",employeeError);
