@@ -1,5 +1,4 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -9,15 +8,14 @@ import IndividualEmployeeDetails from "./IndividualEmployeeDetails";
 
 function HomePage() {
   // Getting the token from the session storage.
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  
   const token = sessionStorage.getItem("token");
   if (!token) {
     navigate("/login-page");
   }
 
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  // const [error, setError] = useState("");
-  // const [loading, setLoading] = useState(true);
   const { loginEmployee, otherEmployees,loading,error } = useSelector(
     (state) => state.employee
   );

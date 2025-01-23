@@ -35,12 +35,6 @@ const employeeSlice = createSlice({
   name: "employee",
   initialState,
   reducers: {
-    getAllEmployees: (state, action) => {
-      //   console.log("the action insde of the getAllemployees:", action);
-
-      state.loginEmployee = { ...action.payload.loginEmployee };
-      state.otherEmployees = [...action.payload.otherEmployees];
-    },
     updateEmployee: (state, action) => {
       //console.log("the action in the updateEmployee folder :", action);
 
@@ -86,7 +80,6 @@ const employeeSlice = createSlice({
 
 export default employeeSlice.reducer;
 export const {
-  getAllEmployees,
   updateEmployee,
   addNewEmployee,
   deleteEmployee,

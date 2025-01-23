@@ -67,8 +67,11 @@ function LoginPage() {
   ];
 
   return (
-    <div className="min-h-screen flex justify-center items-center bg-gray-100 px-2">
-      <div className="bg-white p-8 rounded-lg shadow-md w-80">
+    <div className="min-h-screen flex flex-col items-center justify-center  bg-gray-100 px-2">
+      
+      <img src="/Varthana _Logo.png" class="rounded-full w-2/3 h-2/3" alt="Varthana Logo" />
+      
+      <div className="bg-white p-8 rounded-lg shadow-md w-80 mb-5">
         <h2 className="text-center text-2xl font-bold mb-6">Login</h2>
         <form onSubmit={handleLoginPage}>
 

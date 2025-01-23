@@ -17,7 +17,7 @@ const SelectingRoleComponent = ({ type, data }) => {
       >
         <>
           {data.options.map((element) => (
-            <option value={element}>{element}</option>
+            <option key={element} value={element}>{element}</option>
           ))}
         </>
       </select>
