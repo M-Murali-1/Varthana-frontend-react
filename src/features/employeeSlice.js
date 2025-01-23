@@ -1,10 +1,36 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
 const initialState = {
   loginEmployee: {},
   otherEmployees: [],
+  loading: true,
+  error: "",
 };
 
+export const fetchEmployees = createAsyncThunk(
+  "employee/fetchEmployees",
+  async (_, { rejectWithValue }) => {
+    try {
+      const token = sessionStorage.getItem("token");
+      const response = await axios.get(
+        "http://localhost:8080/employee/getall",
+        {
+          headers: {
+            Authorization: `${token}`,
+          },
+        }
+      );
+      console.log("the data", response.data);
+
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to fetch employees"
+      );
+    }
+  }
+);
 const employeeSlice = createSlice({
   name: "employee",
   initialState,
@@ -32,13 +58,37 @@ const employeeSlice = createSlice({
         (element) => element.id != action.payload
       );
     },
-    deleteAllEmployees:(state)=>{
-        state.loginEmployee={};
-        state.otherEmployees=[];
-    }
+    deleteAllEmployees: (state) => {
+      state.loginEmployee = {};
+      state.otherEmployees = [];
+    },
+  },
+  extraReducers: (builders) => {
+    builders.addCase(fetchEmployees.pending, (state) => {
+      state.loading = true;
+    });
+    builders.addCase(fetchEmployees.fulfilled, (state, action) => {
+      state.loading = false;
+      state.error = "";
+      state.loginEmployee = { ...action.payload.loginEmployee };
+      state.otherEmployees = [...action.payload.otherEmployees];
+    });
+    builders.addCase(fetchEmployees.rejected, (state, action) => {
+      state.loading = false;
+      console.log("the error is:", action);
+
+      state.error = action.payload || "Error fetching employees";
+      state.loginEmployee = {};
+      state.otherEmployees = [];
+    });
   },
 });
 
 export default employeeSlice.reducer;
-export const { getAllEmployees, updateEmployee, addNewEmployee,deleteEmployee,deleteAllEmployees } =
-  employeeSlice.actions;
+export const {
+  getAllEmployees,
+  updateEmployee,
+  addNewEmployee,
+  deleteEmployee,
+  deleteAllEmployees,
+} = employeeSlice.actions;

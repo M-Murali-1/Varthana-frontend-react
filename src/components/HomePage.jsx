@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import LoginUserInfo from "./LoginUserInfo";
-import { getAllEmployees } from "../features/employeeSlice";
+import { fetchEmployees } from "../features/employeeSlice";
 import IndividualEmployeeDetails from "./IndividualEmployeeDetails";
 
 function HomePage() {
@@ -16,37 +16,15 @@ function HomePage() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(true);
-  const { loginEmployee, otherEmployees } = useSelector(
+  // const [error, setError] = useState("");
+  // const [loading, setLoading] = useState(true);
+  const { loginEmployee, otherEmployees,loading,error } = useSelector(
     (state) => state.employee
   );
 
   // Function for the purpose of fetching the data and storing it inside the store.
-  const getDetails = async () => {
-    setLoading(true);
-    setError("");
-    try {
-      const response = await axios.get(
-        "http://localhost:8080/employee/getall",
-        {
-          headers: {
-            Authorization: `${token}`,
-          },
-        }
-      );
-     dispatch(getAllEmployees(response.data));
-    } catch (err) {
-     setError(
-        err.response.data.message || err.message || "Error fetching employees"
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    getDetails();
+    dispatch(fetchEmployees());
   }, []);
 
   if (loading) {
