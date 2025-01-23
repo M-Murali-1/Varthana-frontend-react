@@ -16,6 +16,7 @@ const SelectingRoleComponent = ({ type, data }) => {
         className="border w-full px-4 py-2 rounded-md "
       >
         <>
+        <option value="">None</option>
           {data.options.map((element) => (
             <option key={element} value={element}>{element}</option>
           ))}

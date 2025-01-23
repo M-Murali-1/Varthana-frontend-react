@@ -6,6 +6,13 @@ import LinkComponent from "./LinkComponent";
 import InputFieldComponent from "./InputFieldComponent";
 import { emailValidation, passwordValidation } from "../utils/validations";
 
+import Input from "@mui/material/Input";
+import InputLabel from "@mui/material/InputLabel";
+import InputAdornment from "@mui/material/InputAdornment";
+import FormControl from "@mui/material/FormControl";
+import EmailIcon from "@mui/icons-material/Email";
+import { OutlinedInput } from "@mui/material";
+
 function LoginPage() {
   const navigate = useNavigate();
   const [error, setError] = useState("");
@@ -53,6 +60,7 @@ function LoginPage() {
       value: loginData.email_id,
       required: true,
       error: emailValidation(loginData.email_id),
+      icon:<EmailIcon/>
     },
     {
       id: "password",
@@ -69,12 +77,12 @@ function LoginPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center  bg-gray-100 px-2">
       
-      <img src="/Varthana _Logo.png" class="rounded-full w-2/3 h-2/3" alt="Varthana Logo" />
+      {/* <img src="/Varthana_Logo.png" className="rounded-full my-2" alt="Varthana Logo" /> */}
       
       <div className="bg-white p-8 rounded-lg shadow-md w-80 mb-5">
         <h2 className="text-center text-2xl font-bold mb-6">Login</h2>
         <form onSubmit={handleLoginPage}>
-
+        
           {/* Generating the input field components..! */}
           {inputFieldsData.map((element) => (
             <InputFieldComponent key={element.title} data={element} />

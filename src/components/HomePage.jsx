@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import LoginUserInfo from "./LoginUserInfo";
 import { fetchEmployees } from "../features/employeeSlice";
 import IndividualEmployeeDetails from "./IndividualEmployeeDetails";
-
+import BasicTable from "./TableComponent";
 function HomePage() {
   // Getting the token from the session storage.
   const dispatch = useDispatch();
@@ -24,6 +24,7 @@ function HomePage() {
   useEffect(() => {
     dispatch(fetchEmployees());
   }, []);
+console.log("the login and the other employees are :",loginEmployee,otherEmployees);
 
   if (loading) {
     return <h1>Loading..!</h1>;
@@ -41,10 +42,12 @@ function HomePage() {
   return (
     <div className="min-h-screen">
       <LoginUserInfo employee={loginEmployee} />
-      <div className="grid min-w-md lg:grid-cols-3 grid-cols-1 gap-5 p-5">
-        {Object.values(Employees).map((employee) => (
+      <div className="">
+      {/* grid min-w-md lg:grid-cols-3 grid-cols-1 gap-5 p-5 */}
+        {/* {Object.values(Employees).map((employee) => (
           <IndividualEmployeeDetails key={employee.id} employee={employee} />
-        ))}
+        ))} */}
+        <BasicTable />
       </div>
     </div>
   );

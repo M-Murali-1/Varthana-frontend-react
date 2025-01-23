@@ -8,6 +8,10 @@ import { updateEmployee, addNewEmployee } from "../features/employeeSlice";
 import SelectingRoleComponent from "./selectingRoleComponent";
 import UserRegistrationButtons from "./UserRegistrationButtons";
 import AddressComponent from "./AddressComponent";
+import PersonIcon from '@mui/icons-material/Person';
+import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
+import EmailIcon from '@mui/icons-material/Email';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import {
   confirmPasswordValidation,
   emailValidation,
@@ -23,9 +27,13 @@ let initialState = {
   email_id: "",
   password: "",
   confirm_password: "",
-  Role: "Junior Developer",
+  Role: "",
   address: "",
 };
+
+import dotenv from "dotenv";
+dotenv.config();
+
 const reducer = (state, action) => {
   switch (action.type) {
     case "handleNameChange":
@@ -52,6 +60,9 @@ const reducer = (state, action) => {
 function UserRegistration({ data = {}, type, handleClose = () => {} }) {
   const [registerError, setRegisterError] = useState({ type: "", message: "" });
   console.log(Object.keys(initialState));
+  // const LOCAL_HOST = process.env.REACT_APP_API_URL;
+  // console.log(LOCAL_HOST);
+  
   const initailStateToUse =
     type === "Update Details"
       ? {
@@ -73,13 +84,13 @@ function UserRegistration({ data = {}, type, handleClose = () => {} }) {
 
   console.log("the data for the updating purpose is :", initialState);
   const dispatchEmployee = useDispatch();
-  //console.log("the details while updating are  :", details);
+  console.log("the details while updating are  :", data);
 
   const isValid =
     !nameValidation(details.name) &&
     !phoneNumberValidation(details.phone_number) &&
-    !emailValidation(details.email_id) &&
-    (type == "Update Details" ||
+    !emailValidation(details.email_id) &&(details.Role!=="")&&
+    (type === "Update Details" ||
       (!passwordValidation(details.password) &&
         !confirmPasswordValidation(
           details.confirm_password,
@@ -111,7 +122,7 @@ function UserRegistration({ data = {}, type, handleClose = () => {} }) {
           let token = response.data.token;
           sessionStorage.setItem("token", token);
           console.log("the token got here is :", token);
-          navigate("/home-page");
+          navigate("/login-page");
         } else if (type == "Update Details") {
           console.log(data.id);
           // handleUpdate(null);
@@ -125,10 +136,12 @@ function UserRegistration({ data = {}, type, handleClose = () => {} }) {
               },
             }
           );
+          console.log("the data got here :",data,details);
+          
           console.log("the response is :", response.data.Data);
 
           handleClose();
-          dispatchEmployee(updateEmployee(response.data.Data));
+          dispatchEmployee(updateEmployee({...details,id:data.id}));
           // handleUpdate(data.id);
         } else if (type == "Add New Employee") {
           const token = sessionStorage.getItem("token");
@@ -150,19 +163,19 @@ function UserRegistration({ data = {}, type, handleClose = () => {} }) {
           // handleAdd(response.data.id);
         }
       } catch (err) {
-        console.log("the error occured here is :", err);
+        console.log("the error occured here is :", err?.message);
         // if (err.response.data.type === "emailError") {
         //   emailIdError = err.response.data.message;
         // } else if (err.response.data.type === "PhoneNoError") {
         //   phoneNoError = err.response.data.message;
         // }
-        if (!err.response.data) {
+        if (!err?.response) {
           setRegisterError({
-            message: "There is an error",
-            error: err.message,
+            message: "Network Error..!",
+            error: "Internet conectivity low..!"
           });
         } else {
-          setRegisterError(err.response.data);
+          setRegisterError(err.response?.data || "Failed to fetch employees");
         }
       }
     };
@@ -184,6 +197,7 @@ function UserRegistration({ data = {}, type, handleClose = () => {} }) {
       value: details.name,
       required: true,
       error: nameValidation(details.name),
+      icon:<PersonIcon/>
     },
     {
       id: "username",
@@ -197,6 +211,7 @@ function UserRegistration({ data = {}, type, handleClose = () => {} }) {
         }),
       value: details.username,
       required: true,
+      icon:<AccountCircleIcon/>
     },
     {
       id: "phnumber",
@@ -213,6 +228,7 @@ function UserRegistration({ data = {}, type, handleClose = () => {} }) {
       error:
         phoneNumberValidation(details.phone_number) ||
         (registerError.type == "PhoneNoError" && registerError.message),
+        icon:<LocalPhoneIcon/>
     },
     {
       id: "email",
@@ -229,6 +245,7 @@ function UserRegistration({ data = {}, type, handleClose = () => {} }) {
       error:
         emailValidation(details.email_id) ||
         (registerError.type == "emailError" && registerError.message),
+        icon:<EmailIcon/>
     },
   ];
   let inputFieldsData2 = [
@@ -317,13 +334,14 @@ function UserRegistration({ data = {}, type, handleClose = () => {} }) {
             <SelectingRoleComponent type={type} data={selectingRoleInput} />
 
             {/* Button for submitting the form */}
+            {registerError.message==="Network Error..!"&&<p className="text-end text-sm text-red-600">{registerError.error}</p>}
+            
             <UserRegistrationButtons
               type={type}
               handleUpdateClose={handleUpdateClose}
               isValid={isValid}
             />
-
-            {type == "Register" && (
+           {type == "Register" && (
               <div className="mt-4 text-start md:text-end flex flex-col md:flex-row justify-between">
                 <LinkComponent
                   path="/login-page"

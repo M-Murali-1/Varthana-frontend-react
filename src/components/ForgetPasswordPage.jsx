@@ -9,6 +9,9 @@ import {
   emailValidation,
   phoneNumberValidation,
 } from "../utils/validations";
+import EmailIcon from '@mui/icons-material/Email';
+import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
+import PersonIcon from '@mui/icons-material/Person';
 
 function ForgetPasswordPage() {
   const initial = { name: "", phone_number: "", email_id: "" };
@@ -65,6 +68,7 @@ function ForgetPasswordPage() {
       value: details.name,
       required: true,
       error: nameValidation(details.name),
+      icon:<PersonIcon/>
     },
     {
       id: "phnumber",
@@ -75,6 +79,7 @@ function ForgetPasswordPage() {
       value: details.phone_number,
       required: true,
       error: phoneNumberValidation(details.phone_number),
+      icon:<LocalPhoneIcon/>
     },
     {
       id: "email",
@@ -85,9 +90,11 @@ function ForgetPasswordPage() {
       value: details.email_id,
       required: true,
       error: emailValidation(details.email_id),
+      icon:<EmailIcon/>
     },
   ];
-
+  console.log(inputFieldsData1?.[1]?.error,"this is the required one");
+  
   return (
     <div className="min-h-screen flex justify-center items-center bg-gray-100 px-2">
       <div className="bg-white p-8 rounded-lg shadow-md w-80">
@@ -107,7 +114,7 @@ function ForgetPasswordPage() {
                 : "opacity-50 cursor-not-allowed"
             }`}
             onClick={handleReset}
-            disabled={!isValid && error != ""}
+            disabled={!isValid}
           >
             Reset Password Request
           </button>

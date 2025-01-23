@@ -36,10 +36,12 @@ const employeeSlice = createSlice({
   initialState,
   reducers: {
     updateEmployee: (state, action) => {
-      //console.log("the action in the updateEmployee folder :", action);
+      console.log("the action in the updateEmployee folder :", action.payload.id==182);
 
       state.otherEmployees = state.otherEmployees.map((element) =>
-        element.id == action.payload.id ? action.payload : element
+        element.id == action.payload.id
+          ? { ...element, ...action.payload }
+          : element
       );
     },
     addNewEmployee: (state, action) => {

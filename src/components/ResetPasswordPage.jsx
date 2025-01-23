@@ -8,19 +8,19 @@ import {
   confirmPasswordValidation,
 } from "../utils/validations";
 function ResetPasswordPage() {
+  const navigate = useNavigate();
+  const id = sessionStorage.getItem("id");
+  console.log("the id here is :", !id);
+  if (!id) {
+    navigate("/forget-password-page");
+  }
   const initial = { password: "", confirm_password: "" };
   const [details, setDetails] = useState(initial);
   const [error, setError] = useState("");
-  const navigate = useNavigate();
   const handlePasswordChange = (e) =>
     setDetails({ ...details, password: e.target.value });
   const handleConfirmPasswordChange = (e) =>
     setDetails({ ...details, confirm_password: e.target.value });
-  const id = sessionStorage.getItem("id");
-  console.log("the id here is :", id);
-  if (!id) {
-    navigate("/forget-password-page");
-  }
 
   const inputFieldsData = [
     {
@@ -47,6 +47,7 @@ function ResetPasswordPage() {
       ),
     },
   ];
+  
   const isValid =
     !passwordValidation(details.password) &&
     !confirmPasswordValidation(details.confirm_password, details.password);
