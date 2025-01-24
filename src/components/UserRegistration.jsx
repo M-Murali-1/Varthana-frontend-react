@@ -31,9 +31,6 @@ let initialState = {
   address: "",
 };
 
-import dotenv from "dotenv";
-dotenv.config();
-
 const reducer = (state, action) => {
   switch (action.type) {
     case "handleNameChange":
@@ -110,12 +107,14 @@ function UserRegistration({ data = {}, type, handleClose = () => {} }) {
     // let data = details;
     // delete data.confirm_password;
     console.log("the data for sending:", details);
-
+    
+    console.log("The base URL here is:",import.meta.env.VITE_BASE_API_URL);
     const postEmployee = async () => {
       try {
         if (type == "Register") {
           let response = await axios.post(
-            "http://localhost:8080/auth/register",
+            `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_REGISTER_URL}`,
+            // "http://localhost:8080/auth/register",
             details
           );
           console.log("The response got from the server is :", response);
@@ -128,7 +127,8 @@ function UserRegistration({ data = {}, type, handleClose = () => {} }) {
           // handleUpdate(null);
           const token = sessionStorage.getItem("token");
           let response = await axios.patch(
-            `http://localhost:8080/employee/update/${data.id}`,
+            `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_UPDATE_URL}/${data.id}`,
+            // `http://localhost:8080/employee/update/${data.id}`,
             details,
             {
               headers: {
@@ -145,8 +145,12 @@ function UserRegistration({ data = {}, type, handleClose = () => {} }) {
           // handleUpdate(data.id);
         } else if (type == "Add New Employee") {
           const token = sessionStorage.getItem("token");
+          console.log(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_CREATE_URL}`);
+          
           let response = await axios.post(
-            "http://localhost:8080/employee/create",
+            `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_CREATE_URL}`,
+            
+            // "http://localhost:8080/employee/create",
             details,
             {
               headers: {
@@ -349,7 +353,7 @@ function UserRegistration({ data = {}, type, handleClose = () => {} }) {
                 />
                 <LinkComponent
                   path="/forget-password-page"
-                  data="Forget Password"
+                  data="Forgot Password"
                 />
               </div>
             )}

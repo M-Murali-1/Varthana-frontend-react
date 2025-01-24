@@ -43,7 +43,8 @@ function ForgetPasswordPage() {
     e.preventDefault();
     try {
       let response = await axios.post(
-        "http://localhost:8080/employee/findone",
+        `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_FINDONE_URL}`,
+        //"http://localhost:8080/employee/findone",
         details
       );
       sessionStorage.setItem("id", response.data.id);

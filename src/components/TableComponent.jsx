@@ -33,7 +33,8 @@ export default function BasicTable() {
     console.log("the clicked:", id);
 
     const response = await axios.delete(
-      `http://localhost:8080/employee/delete/${id}`,
+      `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_DELETE_URL}/${id}`,
+      // `http://localhost:8080/employee/delete/${id}`,
       {
         headers: { Authorization: `${token}` },
       }
@@ -45,13 +46,13 @@ export default function BasicTable() {
 
   // Function to handle edit button click
   const handleEditButtonClick = (employee) => {
-    setSelectedEmployee(employee); // Set the selected employee
-    setOpen(true); // Open the modal
+    setSelectedEmployee(employee); 
+    setOpen(true);
   };
 
   const handleClose = () => {
-    setOpen(false); // Close the modal
-    setSelectedEmployee(null); // Clear the selected employee
+    setOpen(false); 
+    setSelectedEmployee(null); 
   };
 
   return (

@@ -47,7 +47,7 @@ function ResetPasswordPage() {
       ),
     },
   ];
-  
+
   const isValid =
     !passwordValidation(details.password) &&
     !confirmPasswordValidation(details.confirm_password, details.password);
@@ -55,7 +55,10 @@ function ResetPasswordPage() {
     e.preventDefault();
     try {
       let response = await axios.patch(
-        `http://localhost:8080/employee/updatepassword/${id}`,
+        `${import.meta.env.VITE_BASE_URL}${
+          import.meta.env.VITE_UPDATE_PASSWORD_URL
+        }/${id}`,
+        // `http://localhost:8080/employee/updatepassword/${id}`,
         details
       );
       navigate("/login-page");
@@ -91,10 +94,7 @@ function ResetPasswordPage() {
             Reset Password
           </button>
         </form>
-        <LinkComponent
-          path="/login-page"
-          data="Have an account? Login"
-        />
+        <LinkComponent path="/login-page" data="Have an account? Login" />
       </div>
     </div>
   );

@@ -35,9 +35,9 @@ const IndividualEmployeeDetails = ({ employee }) => {
   }));
   
   // Logic for handling the delete of the individual employee.
-  async function handleDeleteButton() {
+  async function handleDeleteButton() { //http://localhost:8080/employee/delete/${employee.id}
     const response = await axios.delete(
-      `http://localhost:8080/employee/delete/${employee.id}`,
+      `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_DELETE_URL}/${employee.id}`,
       {
         headers: { Authorization: `${token}` },
       }

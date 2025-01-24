@@ -27,7 +27,8 @@ function LoginPage() {
     try {
       console.log(loginData, "this is the login data");
       const response = await axios.post(
-        "http://localhost:8080/auth/login",
+        `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_LOGIN_URL}`,
+        //"http://localhost:8080/auth/login",
         loginData
       );
 
@@ -60,7 +61,7 @@ function LoginPage() {
       value: loginData.email_id,
       required: true,
       error: emailValidation(loginData.email_id),
-      icon:<EmailIcon/>
+      icon: <EmailIcon />,
     },
     {
       id: "password",
@@ -75,37 +76,38 @@ function LoginPage() {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center  bg-gray-100 px-2">
-      
-      {/* <img src="/Varthana_Logo.png" className="rounded-full my-2" alt="Varthana Logo" /> */}
-      
-      <div className="bg-white p-8 rounded-lg shadow-md w-80 mb-5">
-        <h2 className="text-center text-2xl font-bold mb-6">Login</h2>
-        <form onSubmit={handleLoginPage}>
-        
-          {/* Generating the input field components..! */}
-          {inputFieldsData.map((element) => (
-            <InputFieldComponent key={element.title} data={element} />
-          ))}
+    <div className=" bg-gray-100">
+      <div className=" min-h-screen flex flex-col items-center justify-center px-2">
+        {/* <p>Welcome to Varthana</p> */}
+        {/* <img src="/Varthana_Logo.png" className="rounded-full my-2" alt="Varthana Logo" /> */}
 
-          {/* Displaying the Server side errors while logging..! */}
-          <div className="text-red-500 mb-1 text-sm text-right">
-            {error && <p>{error}</p>}
-          </div>
-          
-          <button
-            type="submit"
-            className="bg-blue-500 text-white w-full py-2 mb-2 rounded-md hover:bg-blue-600"
-          >
-            Login
-          </button>
-        </form>
-        {/* Links for Navigating to the register and forgot password page..! */}
+        <div className="bg-white p-8 rounded-lg shadow-md w-80 mb-5">
+          <h2 className="text-center text-2xl font-bold mb-6">Login</h2>
+          <form onSubmit={handleLoginPage}>
+            {/* Generating the input field components..! */}
+            {inputFieldsData.map((element) => (
+              <InputFieldComponent key={element.title} data={element} />
+            ))}
+
+            {/* Displaying the Server side errors while logging..! */}
+            <div className="text-red-500 mb-1 text-sm text-right">
+              {error && <p>{error}</p>}
+            </div>
+
+            <button
+              type="submit"
+              className="bg-blue-500 text-white w-full py-2 mb-2 rounded-md hover:bg-blue-600"
+            >
+              Login
+            </button>
+          </form>
+          {/* Links for Navigating to the register and forgot password page..! */}
           <LinkComponent
             path="/signup-page"
             data="Don't have an account? Sign up."
           />
-          <LinkComponent path="/forget-password-page" data="Forget Password" />
+          <LinkComponent path="/forget-password-page" data="Forgot Password" />
+        </div>
       </div>
     </div>
   );
