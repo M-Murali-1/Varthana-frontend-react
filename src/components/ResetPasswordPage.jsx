@@ -10,7 +10,7 @@ import {
 function ResetPasswordPage() {
   const navigate = useNavigate();
   const id = sessionStorage.getItem("id");
-  console.log("the id here is :", !id);
+
   if (!id) {
     navigate("/forget-password-page");
   }
@@ -51,6 +51,7 @@ function ResetPasswordPage() {
   const isValid =
     !passwordValidation(details.password) &&
     !confirmPasswordValidation(details.confirm_password, details.password);
+
   async function handleSubmit(e) {
     e.preventDefault();
     try {
@@ -58,7 +59,6 @@ function ResetPasswordPage() {
         `${import.meta.env.VITE_BASE_URL}${
           import.meta.env.VITE_UPDATE_PASSWORD_URL
         }/${id}`,
-        // `http://localhost:8080/employee/updatepassword/${id}`,
         details
       );
       navigate("/login-page");
@@ -71,7 +71,12 @@ function ResetPasswordPage() {
     }
   }
   return (
-    <div className="min-h-screen flex justify-center items-center bg-gray-100 px-2">
+    <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100 px-2">
+      <img
+        src="/Varthana_Logo1.webp"
+        className="rounded-full mb-5"
+        alt="Varthana Logo"
+      />
       <div className="bg-white p-8 rounded-lg shadow-md w-80">
         <h2 className="text-center text-2xl font-bold mb-6">
           Reset Your Password
@@ -86,8 +91,8 @@ function ResetPasswordPage() {
           )}
           <button
             type="submit"
-            className={`bg-blue-500 text-white w-full py-2 rounded-md ${
-              isValid ? "hover:bg-blue-600" : "opacity-50 cursor-not-allowed"
+            className={`bg-[#57A649] text-white w-full py-2 mt-2 rounded-md ${
+              isValid ? "hover:opacity-100 opacity-90" : "opacity-80 cursor-not-allowed"
             }`}
             disabled={!isValid}
           >

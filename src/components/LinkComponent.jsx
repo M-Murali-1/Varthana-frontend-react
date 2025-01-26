@@ -5,7 +5,7 @@ const LinkComponent = (props) => {
   return (
     <div>
       <Link to={props.path}>
-        <p className="text-blue-500 hover:underline mt-1">{props.data}</p>
+        <p className="text-[#57A649] opacity-80 hover:underline hover:opacity-100 mt-1">{props.data}</p>
       </Link>
     </div>
   );

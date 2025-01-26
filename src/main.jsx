@@ -10,8 +10,6 @@ createRoot(document.getElementById("root")).render(
     <BrowserRouter>
       <Provider store={store}>
         <App />
-        {/* <MaterialUiComponents /> */}
-        {/* <BasicTable/> */}
       </Provider>
     </BrowserRouter>
   </StrictMode>

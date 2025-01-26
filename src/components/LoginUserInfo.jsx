@@ -31,19 +31,19 @@ function LoginUserInfo() {
   return (
     <div className="flex p-5 bg-gray-100 justify-between items-baseline">
       <p className="text-gray-800 font-semibold">
-        Hi, {employee.name} ({employee.Role})
+        {`Hi, ${employee.name} - ${employee.id}  ( ${employee.Role} )`}
       </p>
       <div className="flex gap-5">
         {employee.Role == "Admin" && (
           <button
-            className="rounded-lg bg-purple-600 text-white p-2"
+            className="rounded-lg bg-[#236d80] text-white p-2"
             onClick={handleOpen}
           >
             New User
           </button>
         )}
         <button
-          className="rounded-lg bg-purple-600 text-white p-2"
+          className="rounded-lg bg-[#236d80] text-white p-2"
           onClick={handleLogoutChange}
         >
           Logout

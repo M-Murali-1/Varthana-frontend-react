@@ -7,7 +7,7 @@ function UserRegistrationButtons({ type, handleUpdateClose, isValid }) {
     >
       {type === "Update Details" && (
         <button
-          className={`bg-red-500  ${
+          className={`bg-[#236d80]  ${
             type == "Update Details" ? "w-2/5" : "w-full"
           } text-white py-2 mt-2 rounded-md`}
           onClick={handleUpdateClose}
@@ -17,10 +17,10 @@ function UserRegistrationButtons({ type, handleUpdateClose, isValid }) {
       )}
       <button
         type="submit"
-        className={`bg-blue-500 text-white ${
+        className={`bg-[#57A649] text-white opacity-50 ${
           type == "Update Details" ? "w-2/5" : "w-full"
         } py-2 mt-2 rounded-md ${
-          isValid ? "hover:bg-blue-600" : "opacity-50 cursor-not-allowed"
+          isValid ? "hover:opacity-90 opacity-100" : "opacity-70 cursor-not-allowed"
         }`}
         disabled={!isValid}
       >

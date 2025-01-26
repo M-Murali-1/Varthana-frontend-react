@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import InputFieldComponent from "./InputFieldComponent";
-import { useReducer } from "react";
+import { useReducer, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import LinkComponent from "./LinkComponent";
@@ -8,16 +8,17 @@ import { updateEmployee, addNewEmployee } from "../features/employeeSlice";
 import SelectingRoleComponent from "./selectingRoleComponent";
 import UserRegistrationButtons from "./UserRegistrationButtons";
 import AddressComponent from "./AddressComponent";
-import PersonIcon from '@mui/icons-material/Person';
-import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
-import EmailIcon from '@mui/icons-material/Email';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import PersonIcon from "@mui/icons-material/Person";
+import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
+import EmailIcon from "@mui/icons-material/Email";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import {
   confirmPasswordValidation,
   emailValidation,
   nameValidation,
   passwordValidation,
   phoneNumberValidation,
+  userNameValidation,
 } from "../utils/validations";
 import axios from "axios";
 let initialState = {
@@ -55,11 +56,10 @@ const reducer = (state, action) => {
 };
 
 function UserRegistration({ data = {}, type, handleClose = () => {} }) {
-  const [registerError, setRegisterError] = useState({ type: "", message: "" });
+  const initialError = { type: "", message: "" };
+  const [registerError, setRegisterError] = useState(initialError);
   console.log(Object.keys(initialState));
-  // const LOCAL_HOST = process.env.REACT_APP_API_URL;
-  // console.log(LOCAL_HOST);
-  
+
   const initailStateToUse =
     type === "Update Details"
       ? {
@@ -82,17 +82,25 @@ function UserRegistration({ data = {}, type, handleClose = () => {} }) {
   console.log("the data for the updating purpose is :", initialState);
   const dispatchEmployee = useDispatch();
   console.log("the details while updating are  :", data);
+  useEffect(() => {
+    if (registerError.type !== "") {
+      setRegisterError(initialError);
+    }
+  }, [details]);
 
   const isValid =
     !nameValidation(details.name) &&
+    !userNameValidation(details.username) &&
     !phoneNumberValidation(details.phone_number) &&
-    !emailValidation(details.email_id) &&(details.Role!=="")&&
+    !emailValidation(details.email_id) &&
+    details.Role !== "" &&
     (type === "Update Details" ||
       (!passwordValidation(details.password) &&
         !confirmPasswordValidation(
           details.confirm_password,
           details.password
-        )));
+        ))) &&
+    registerError?.type === "";
   console.log("the form is valid :", isValid);
 
   console.log(details);
@@ -103,80 +111,55 @@ function UserRegistration({ data = {}, type, handleClose = () => {} }) {
   }
   function handleRegister(e) {
     e.preventDefault();
-    console.log("the data got :", details);
-    // let data = details;
-    // delete data.confirm_password;
-    console.log("the data for sending:", details);
-    
-    console.log("The base URL here is:",import.meta.env.VITE_BASE_API_URL);
     const postEmployee = async () => {
       try {
         if (type == "Register") {
           let response = await axios.post(
-            `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_REGISTER_URL}`,
-            // "http://localhost:8080/auth/register",
+            `${import.meta.env.VITE_BASE_URL}${
+              import.meta.env.VITE_REGISTER_URL
+            }`,
             details
           );
-          console.log("The response got from the server is :", response);
           let token = response.data.token;
           sessionStorage.setItem("token", token);
-          console.log("the token got here is :", token);
           navigate("/login-page");
         } else if (type == "Update Details") {
-          console.log(data.id);
-          // handleUpdate(null);
           const token = sessionStorage.getItem("token");
           let response = await axios.patch(
-            `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_UPDATE_URL}/${data.id}`,
-            // `http://localhost:8080/employee/update/${data.id}`,
+            `${import.meta.env.VITE_BASE_URL}${
+              import.meta.env.VITE_UPDATE_URL
+            }/${data.id}`,
             details,
             {
               headers: {
-                Authorization: `${token}`,
+                Authorization: `Bearer ${token}`,
               },
             }
           );
-          console.log("the data got here :",data,details);
-          
-          console.log("the response is :", response.data.Data);
-
           handleClose();
-          dispatchEmployee(updateEmployee({...details,id:data.id}));
-          // handleUpdate(data.id);
+          dispatchEmployee(updateEmployee({ ...details, id: data.id }));
         } else if (type == "Add New Employee") {
           const token = sessionStorage.getItem("token");
-          console.log(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_CREATE_URL}`);
-          
+
           let response = await axios.post(
-            `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_CREATE_URL}`,
-            
-            // "http://localhost:8080/employee/create",
+            `${import.meta.env.VITE_BASE_URL}${
+              import.meta.env.VITE_CREATE_URL
+            }`,
             details,
             {
               headers: {
-                Authorization: `${token}`,
+                Authorization: `Bearer ${token}`,
               },
             }
-          );
-          console.log(
-            "the response here is after inserting :",
-            response.data.newEmployee
           );
           handleClose();
           dispatchEmployee(addNewEmployee(response.data.newEmployee));
-          // handleAdd(response.data.id);
-        }
+         }
       } catch (err) {
-        console.log("the error occured here is :", err?.message);
-        // if (err.response.data.type === "emailError") {
-        //   emailIdError = err.response.data.message;
-        // } else if (err.response.data.type === "PhoneNoError") {
-        //   phoneNoError = err.response.data.message;
-        // }
         if (!err?.response) {
           setRegisterError({
             message: "Network Error..!",
-            error: "Internet conectivity low..!"
+            error: "No Internet conectivity..!",
           });
         } else {
           setRegisterError(err.response?.data || "Failed to fetch employees");
@@ -185,8 +168,6 @@ function UserRegistration({ data = {}, type, handleClose = () => {} }) {
     };
     postEmployee();
   }
-  console.log(registerError, "this is the error1");
-
   let inputFieldsData1 = [
     {
       id: "name",
@@ -201,7 +182,7 @@ function UserRegistration({ data = {}, type, handleClose = () => {} }) {
       value: details.name,
       required: true,
       error: nameValidation(details.name),
-      icon:<PersonIcon/>
+      icon: <PersonIcon />,
     },
     {
       id: "username",
@@ -215,7 +196,10 @@ function UserRegistration({ data = {}, type, handleClose = () => {} }) {
         }),
       value: details.username,
       required: true,
-      icon:<AccountCircleIcon/>
+      error:
+        userNameValidation(details.username) ||
+        (registerError.type == "usernameError" && registerError.message),
+      icon: <AccountCircleIcon />,
     },
     {
       id: "phnumber",
@@ -232,7 +216,7 @@ function UserRegistration({ data = {}, type, handleClose = () => {} }) {
       error:
         phoneNumberValidation(details.phone_number) ||
         (registerError.type == "PhoneNoError" && registerError.message),
-        icon:<LocalPhoneIcon/>
+      icon: <LocalPhoneIcon />,
     },
     {
       id: "email",
@@ -249,7 +233,7 @@ function UserRegistration({ data = {}, type, handleClose = () => {} }) {
       error:
         emailValidation(details.email_id) ||
         (registerError.type == "emailError" && registerError.message),
-        icon:<EmailIcon/>
+      icon: <EmailIcon />,
     },
   ];
   let inputFieldsData2 = [
@@ -316,7 +300,6 @@ function UserRegistration({ data = {}, type, handleClose = () => {} }) {
       <h2 className="text-center text-2xl font-bold mb-6">{type}</h2>
       <form onSubmit={handleRegister}>
         <div className="flex gap-0 md:gap-10 flex-col md:flex-row">
-          
           {/* Field for name,username,phone number,email */}
           <div className="w-full md:w-1/2">
             {inputFieldsData1.map((element) => (
@@ -338,14 +321,18 @@ function UserRegistration({ data = {}, type, handleClose = () => {} }) {
             <SelectingRoleComponent type={type} data={selectingRoleInput} />
 
             {/* Button for submitting the form */}
-            {registerError.message==="Network Error..!"&&<p className="text-end text-sm text-red-600">{registerError.error}</p>}
-            
+            {registerError.message === "Network Error..!" && (
+              <p className="text-end text-sm text-red-600">
+                {registerError.error}
+              </p>
+            )}
+
             <UserRegistrationButtons
               type={type}
               handleUpdateClose={handleUpdateClose}
               isValid={isValid}
             />
-           {type == "Register" && (
+            {type == "Register" && (
               <div className="mt-4 text-start md:text-end flex flex-col md:flex-row justify-between">
                 <LinkComponent
                   path="/login-page"

@@ -1,17 +1,11 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import LinkComponent from "./LinkComponent";
 import InputFieldComponent from "./InputFieldComponent";
 import { emailValidation, passwordValidation } from "../utils/validations";
-
-import Input from "@mui/material/Input";
-import InputLabel from "@mui/material/InputLabel";
-import InputAdornment from "@mui/material/InputAdornment";
-import FormControl from "@mui/material/FormControl";
 import EmailIcon from "@mui/icons-material/Email";
-import { OutlinedInput } from "@mui/material";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -42,6 +36,13 @@ function LoginPage() {
     }
   }
 
+  // Removing the error when there is an error and we changed the data in the login form.
+  useEffect(() => {
+    if (error !== "") {
+      setError("");
+    }
+  }, [loginData]);
+
   // functional logic for storing the data from the input fields.
   const handleEmailChange = (e) => {
     setLoginData((prev) => ({ ...prev, email_id: e.target.value }));
@@ -60,7 +61,7 @@ function LoginPage() {
       handleChange: handleEmailChange,
       value: loginData.email_id,
       required: true,
-      error: emailValidation(loginData.email_id),
+      // error: emailValidation(loginData.email_id),
       icon: <EmailIcon />,
     },
     {
@@ -71,18 +72,34 @@ function LoginPage() {
       handleChange: handlePasswordChange,
       value: loginData.password,
       required: true,
-      error: passwordValidation(loginData.password),
+      // error: passwordValidation(loginData.password),
     },
   ];
 
   return (
-    <div className=" bg-gray-100">
-      <div className=" min-h-screen flex flex-col items-center justify-center px-2">
+    <div className="">
+      {/* <div className="absolute top-0 left-0 p-4 flex gap-5 items-center">
+        <a href="https://varthana.com/" className="">
+          <img
+            src="/Varthana_Logo.png"
+            className="h-16 w-16 rounded-full"
+            alt="Varthana Logo"
+          />
+        </a>
+        <p className="text-[#56A446] font-bold">Welcome to Varthana</p>
+      </div> */}
+      <div className=" min-h-screen flex flex-col  bg-gray-100 items-center justify-center px-2">
         {/* <p>Welcome to Varthana</p> */}
-        {/* <img src="/Varthana_Logo.png" className="rounded-full my-2" alt="Varthana Logo" /> */}
+        {/* <img src="/Varthana_Logo.png" className="rounded-full my-2 h-16 w-16" alt="Varthana Logo" /> */}
+        <img
+          src="/Varthana_Logo1.webp"
+          className="rounded-full mb-5"
+          alt="Varthana Logo"
+        />
 
         <div className="bg-white p-8 rounded-lg shadow-md w-80 mb-5">
-          <h2 className="text-center text-2xl font-bold mb-6">Login</h2>
+          <p className="text-center text-2xl font-bold my-3">Login</p>
+
           <form onSubmit={handleLoginPage}>
             {/* Generating the input field components..! */}
             {inputFieldsData.map((element) => (
@@ -96,7 +113,7 @@ function LoginPage() {
 
             <button
               type="submit"
-              className="bg-blue-500 text-white w-full py-2 mb-2 rounded-md hover:bg-blue-600"
+              className="bg-[#57A649] text-white w-full py-2 mb-2 rounded-md hover:opacity-80"
             >
               Login
             </button>

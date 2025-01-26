@@ -4,25 +4,29 @@ import { useNavigate } from "react-router-dom";
 
 import InputFieldComponent from "./InputFieldComponent";
 import LinkComponent from "./LinkComponent";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+
 import {
-  nameValidation,
+  userNameValidation,
   emailValidation,
   phoneNumberValidation,
 } from "../utils/validations";
-import EmailIcon from '@mui/icons-material/Email';
-import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
-import PersonIcon from '@mui/icons-material/Person';
+import EmailIcon from "@mui/icons-material/Email";
+import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 
 function ForgetPasswordPage() {
-  const initial = { name: "", phone_number: "", email_id: "" };
+  const initial = { username: "", phone_number: "", email_id: "" };
   const navigate = useNavigate();
 
   const [details, setDetails] = useState(initial);
   const [error, setError] = useState("");
 
   // Functions for handling the input field changes.
-  const handleNameChange = (e) =>
-    setDetails({ ...details, name: e.target.value });
+  // const handleNameChange = (e) =>
+  //   setDetails({ ...details, name: e.target.value });
+  const handleUserNameChange = (e) =>
+    setDetails({ ...details, username: e.target.value });
+
   const handlePhNumberChange = (e) =>
     setDetails({ ...details, phone_number: e.target.value });
   const handleEmailChange = (e) =>
@@ -30,12 +34,16 @@ function ForgetPasswordPage() {
 
   // Logic for the validation of the input.
   const isValid =
-    !nameValidation(details.name) &&
+    !userNameValidation(details.username) &&
     !phoneNumberValidation(details.phone_number) &&
     !emailValidation(details.email_id);
 
   useEffect(() => {
-    setError("");
+    if (error !== "") {
+      console.log("rendering..!");
+      
+      setError("");
+    }
   }, [details]);
 
   // Logic for the purpose of reseting the password.
@@ -61,15 +69,15 @@ function ForgetPasswordPage() {
   // Data required for building the input fields.
   const inputFieldsData1 = [
     {
-      id: "name",
-      title: "Name",
+      id: "username",
+      title: "Username",
       type: "text",
-      placeholder: "Enter your name",
-      handleChange: handleNameChange,
-      value: details.name,
+      placeholder: "Enter your username",
+      handleChange: handleUserNameChange,
+      value: details.username,
       required: true,
-      error: nameValidation(details.name),
-      icon:<PersonIcon/>
+      error: userNameValidation(details.username),
+      icon: <AccountCircleIcon />,
     },
     {
       id: "phnumber",
@@ -80,7 +88,7 @@ function ForgetPasswordPage() {
       value: details.phone_number,
       required: true,
       error: phoneNumberValidation(details.phone_number),
-      icon:<LocalPhoneIcon/>
+      icon: <LocalPhoneIcon />,
     },
     {
       id: "email",
@@ -91,13 +99,15 @@ function ForgetPasswordPage() {
       value: details.email_id,
       required: true,
       error: emailValidation(details.email_id),
-      icon:<EmailIcon/>
+      icon: <EmailIcon />,
     },
   ];
-  console.log(inputFieldsData1?.[1]?.error,"this is the required one");
-  
+  console.log(inputFieldsData1?.[1]?.error, "this is the required one");
+
   return (
-    <div className="min-h-screen flex justify-center items-center bg-gray-100 px-2">
+    <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100 px-2">
+      <img src="/Varthana_Logo1.webp" className="rounded-full mb-5" alt="Varthana Logo" />
+     
       <div className="bg-white p-8 rounded-lg shadow-md w-80">
         <h2 className="text-center text-2xl font-bold mb-6">Change Password</h2>
         <form>
@@ -105,13 +115,13 @@ function ForgetPasswordPage() {
             <InputFieldComponent key={element.title} data={element} />
           ))}
           {error && (
-            <p className="mb-2 text-red-500 text-sm text-right">{error}</p>
+            <p className="mb-2 text-red-500 text-sm  text-right">{error}</p>
           )}
           <button
             type="submit"
-            className={`bg-blue-500 text-white w-full py-2 rounded-md ${
+            className={`bg-[#57A649] text-white w-full py-2 rounded-md ${
               isValid && error == ""
-                ? "hover:bg-blue-600"
+                ? "hover:bg-[#57A649]"
                 : "opacity-50 cursor-not-allowed"
             }`}
             onClick={handleReset}

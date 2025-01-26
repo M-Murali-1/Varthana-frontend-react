@@ -17,7 +17,7 @@ import ModelforUpdateAdd from "./ModelforUpdateAdd";
 import { useState } from "react";
 
 export default function BasicTable() {
-  const { loginEmployee, otherEmployees, loading, error } = useSelector(
+  const { loginEmployee, otherEmployees } = useSelector(
     (state) => state.employee
   );
 
@@ -36,7 +36,7 @@ export default function BasicTable() {
       `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_DELETE_URL}/${id}`,
       // `http://localhost:8080/employee/delete/${id}`,
       {
-        headers: { Authorization: `${token}` },
+        headers: { Authorization: `Bearer ${token}` },
       }
     );
 
@@ -104,7 +104,7 @@ export default function BasicTable() {
               <TableCell>
                 {employee.address && employee.address !== ""
                   ? employee.address
-                  : "Address not Added"}
+                  : "-"}
               </TableCell>
               {(loginEmployee.Role === "Admin" ||
                 loginEmployee.Role === "Senior Developer") && (
