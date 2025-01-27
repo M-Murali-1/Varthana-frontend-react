@@ -1,17 +1,31 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import LinkComponent from "./LinkComponent";
 import InputFieldComponent from "./InputFieldComponent";
-import { emailValidation, passwordValidation } from "../utils/validations";
 import EmailIcon from "@mui/icons-material/Email";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchEmployees } from "../features/employeeSlice";
+import Snackbar from "@mui/material/Snackbar";
 
 function LoginPage() {
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const initial = { email_id: "", password: "" };
   const [loginData, setLoginData] = useState(initial);
+  const dispatch = useDispatch();
+
+  const { loading, error: fetchingError } = useSelector(
+    (state) => state.employee
+  );
+  const [open, setOpen] = useState(false);
+  const handleClose = (reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   // Logic for handling the login page submission.
   async function handleLoginPage(e) {
@@ -22,7 +36,6 @@ function LoginPage() {
       console.log(loginData, "this is the login data");
       const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_LOGIN_URL}`,
-        //"http://localhost:8080/auth/login",
         loginData
       );
 
@@ -30,7 +43,9 @@ function LoginPage() {
 
       // Setting the token within the sessionstorage.
       sessionStorage.setItem("token", response.data.token);
-      navigate("/home-page");
+
+      // Function for the purpose of fetching the data and storing it inside the store.
+      dispatch(fetchEmployees());
     } catch (err) {
       setError(err.response.data.message);
     }
@@ -76,21 +91,24 @@ function LoginPage() {
     },
   ];
 
+  // If there is an error it will activates the snackbar or else it will navigate to the home page.
+  useEffect(() => {
+    console.log("the fetching error here is:", fetchingError);
+
+    if (fetchingError) {
+      setOpen(true);
+    } else if (
+      fetchingError === "" &&
+      !loading &&
+      sessionStorage.getItem("token")
+    ) {
+      navigate("/home-page");
+    }
+  }, [fetchingError, loading]);
+
   return (
     <div className="">
-      {/* <div className="absolute top-0 left-0 p-4 flex gap-5 items-center">
-        <a href="https://varthana.com/" className="">
-          <img
-            src="/Varthana_Logo.png"
-            className="h-16 w-16 rounded-full"
-            alt="Varthana Logo"
-          />
-        </a>
-        <p className="text-[#56A446] font-bold">Welcome to Varthana</p>
-      </div> */}
       <div className=" min-h-screen flex flex-col  bg-gray-100 items-center justify-center px-2">
-        {/* <p>Welcome to Varthana</p> */}
-        {/* <img src="/Varthana_Logo.png" className="rounded-full my-2 h-16 w-16" alt="Varthana Logo" /> */}
         <img
           src="/Varthana_Logo1.webp"
           className="rounded-full mb-5"
@@ -125,6 +143,17 @@ function LoginPage() {
           />
           <LinkComponent path="/forget-password-page" data="Forgot Password" />
         </div>
+
+        {fetchingError && (
+          <div>
+            <Snackbar
+              open={open}
+              autoHideDuration={5000}
+              onClose={handleClose}
+              message={fetchingError}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

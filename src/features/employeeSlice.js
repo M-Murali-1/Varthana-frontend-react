@@ -17,7 +17,7 @@ export const fetchEmployees = createAsyncThunk(
         "http://localhost:8080/api/employee/getall",
         {
           headers: {
-            Authorization: `Bearer ${token}1`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );

@@ -29,7 +29,11 @@ let initialState = {
   password: "",
   confirm_password: "",
   Role: "",
-  address: "",
+  address: {
+    doorno: "",
+    street: "",
+    city: "",
+  },
 };
 
 const reducer = (state, action) => {
@@ -50,6 +54,22 @@ const reducer = (state, action) => {
       return { ...state, Role: action.payload.Role };
     case "handleAddressChange":
       return { ...state, address: action.payload.address };
+    case "handleDoorNoChange":
+      return {
+        ...state,
+        address: { ...state.address, doorno: action.payload.doorno },
+      };
+    case "handleStreetChange":
+      return {
+        ...state,
+        address: { ...state.address, street: action.payload.street },
+      };
+    case "handleCityChange":
+      return {
+        ...state,
+        address: { ...state.address, city: action.payload.city },
+      };
+
     case "reset":
       return initialState;
   }
@@ -154,7 +174,7 @@ function UserRegistration({ data = {}, type, handleClose = () => {} }) {
           );
           handleClose();
           dispatchEmployee(addNewEmployee(response.data.newEmployee));
-         }
+        }
       } catch (err) {
         if (!err?.response) {
           setRegisterError({
@@ -279,17 +299,62 @@ function UserRegistration({ data = {}, type, handleClose = () => {} }) {
       }),
     options: ["Junior Developer", "Senior Developer", "Admin"],
   };
-  let addressInput = {
-    id: "address",
-    title: "Add Address",
-    placeholder: "Add Address",
-    handleChange: (e) =>
-      dispatch({
-        type: "handleAddressChange",
-        payload: { address: e.target.value },
-      }),
-    value: details.address,
-  };
+  let addressInput = [
+    {
+      id: "doorno",
+      title: "Door No",
+      type: "text",
+      placeholder: "Enter your door no",
+      handleChange: (e) =>
+        dispatch({
+          type: "handleDoorNoChange",
+          payload: { doorno: e.target.value },
+        }),
+      value: details.address.doorno,
+      required: false,
+      icon: <PersonIcon />,
+    },
+    {
+      id: "street",
+      title: "Street",
+      type: "text",
+      placeholder: "Enter your Street",
+      handleChange: (e) =>
+        dispatch({
+          type: "handleStreetChange",
+          payload: { street: e.target.value },
+        }),
+      value: details.address.street,
+      required: false,
+      icon: <AccountCircleIcon />,
+    },
+    {
+      id: "city",
+      title: "City",
+      type: "text",
+      placeholder: "Enter your City",
+      handleChange: (e) =>
+        dispatch({
+          type: "handleCityChange",
+          payload: { city: e.target.value },
+        }),
+      value: details.address.city,
+      required: false,
+      icon: <LocalPhoneIcon />,
+    },
+  ];
+
+  // {
+  //   id: "address",
+  //   title: "Add Address",
+  //   placeholder: "Add Address",
+  //   handleChange: (e) =>
+  //     dispatch({
+  //       type: "handleAddressChange",
+  //       payload: { address: e.target.value },
+  //     }),
+  //   value: details.address,
+  // };
 
   // if (type == "Update Details") {
   //   inputFieldsData2[0] = inputFieldsData1.pop();
@@ -313,9 +378,12 @@ function UserRegistration({ data = {}, type, handleClose = () => {} }) {
               inputFieldsData2.map((element) => (
                 <InputFieldComponent key={element.title} data={element} />
               ))}
-
-            {/* Field for adding Address */}
-            <AddressComponent type={type} data={addressInput} />
+            {type == "Update Details" &&
+              addressInput.map((element) => (
+                <InputFieldComponent key={element.title} data={element} />
+              ))}
+            {/* Field for adding Address
+            <AddressComponent type={type} data={addressInput} /> */}
 
             {/* Field for selecting the role */}
             <SelectingRoleComponent type={type} data={selectingRoleInput} />

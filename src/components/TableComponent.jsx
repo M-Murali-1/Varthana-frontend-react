@@ -102,11 +102,11 @@ export default function BasicTable() {
               <TableCell>{employee.email_id}</TableCell>
               <TableCell>{employee.Role}</TableCell>
               <TableCell>
-                {employee.address && employee.address !== ""
-                  ? employee.address
+                {employee.address && Object.values(employee.address).join("") !== ""
+                  ? `${employee.address.doorno}, ${employee.address.street}, ${employee.address.city}`
                   : "-"}
               </TableCell>
-              {(loginEmployee.Role === "Admin" ||
+              {(loginEmployee.Role === "Admin" || 
                 loginEmployee.Role === "Senior Developer") && (
                 <TableCell>
                   <IconButton onClick={() => handleEditButtonClick(employee)}>
