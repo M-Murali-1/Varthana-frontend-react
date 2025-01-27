@@ -6,17 +6,16 @@ import ModelforUpdateAdd from "./ModelforUpdateAdd";
 import { deleteAllEmployees } from "../features/employeeSlice";
 
 function LoginUserInfo() {
-
   // Methods for handling the actions on the store and redirections.
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
+
   // Getting the Login user info.
   const { employee } = useSelector((state) => ({
     employee: state.employee.loginEmployee,
   }));
 
-  // State and the modal for handling the modal 
+  // State and the modal for handling the modal
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -27,9 +26,9 @@ function LoginUserInfo() {
     dispatch(deleteAllEmployees());
     navigate("/login-page");
   }
-  
+
   return (
-    <div className="flex p-5 bg-gray-100 justify-between items-baseline">
+    <div className="flex p-5 bg-[#57A649] justify-between items-baseline">
       <p className="text-gray-800 font-semibold">
         {`Hi, ${employee.name} - ${employee.id}  ( ${employee.Role} )`}
       </p>
