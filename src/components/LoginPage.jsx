@@ -64,6 +64,11 @@ function LoginPage() {
     setLoginData((prev) => ({ ...prev, password: e.target.value }));
   };
 
+  const handleFormChange=(action)=>{
+   setLoginData((prev)=>({...prev,...action.payload}))
+  }
+  console.log("the data got here :",loginData);
+  
   // Data required for creating the input fileds (emailid,password)
   const inputFieldsData = [
     {
@@ -71,7 +76,7 @@ function LoginPage() {
       title: "Email",
       type: "email",
       placeholder: "Enter your email id",
-      handleChange: handleEmailChange,
+      handleChange: (event)=>handleFormChange({payload:{email_id:event.target.value}}),
       value: loginData.email_id,
       required: true,
       // error: emailValidation(loginData.email_id),
@@ -82,7 +87,7 @@ function LoginPage() {
       title: "Password",
       type: "password",
       placeholder: "Enter your password",
-      handleChange: handlePasswordChange,
+      handleChange: (event)=>handleFormChange({payload:{password:event.target.value}}),
       value: loginData.password,
       required: true,
       // error: passwordValidation(loginData.password),

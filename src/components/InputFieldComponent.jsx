@@ -9,41 +9,43 @@ import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 
 function InputFieldComponent({ data }) {
-  
   // Logic for the toggling the password visiblility..!
   const [visible, setVisible] = useState(false);
-  if (data.type == "password") {
+  if (data.type === "password") {
     data.isPassword = true;
   }
   function handlePassword(e) {
-    console.log("clikced..!", visible);
     data.type = visible ? "password" : "text";
     setVisible(!visible);
   }
 
   return (
     // Logic for the creating the Single Input field component
-    <div className="">
-      <FormControl variant="outlined" fullWidth margin="normal"
-      sx={{
-        "& .MuiOutlinedInput-root": {
-          "& fieldset": {
-            borderColor: "#57A649",
+    <div>
+      <FormControl
+        variant="outlined"
+        fullWidth
+        margin="normal"
+        sx={{
+          "& .MuiOutlinedInput-root": {
+            "& fieldset": {
+              borderColor: "#57A649",
+            },
+            "&:hover fieldset": {
+              borderColor: "#57A649",
+            },
+            "&.Mui-focused fieldset": {
+              borderColor: "#57A649",
+            },
           },
-          "&:hover fieldset": {
-            borderColor: "#57A649",
-          },
-          "&.Mui-focused fieldset": {
-            borderColor: "#57A649",
-          },
-        },
-      }}>
+        }}
+      >
         <InputLabel
           htmlFor={data.id}
-          error={data.error && data.value != ""}
+          error={data.error && data.value !== ""}
           focused={true}
           sx={{
-           color: "#000000",
+            color: "#000000",
             "&.Mui-focused": { color: "#000000" },
             "&.Mui-error": { color: "#000000" },
           }}
@@ -63,7 +65,7 @@ function InputFieldComponent({ data }) {
             data.isPassword && (
               <InputAdornment position="end">
                 <IconButton onClick={handlePassword}>
-                  {data.type == "password" ? (
+                  {data.type === "password" ? (
                     <VisibilityOutlinedIcon />
                   ) : (
                     <VisibilityOffOutlinedIcon />
@@ -80,9 +82,9 @@ function InputFieldComponent({ data }) {
           type={data.type}
         />
       </FormControl>
-      
+
       {/* Handling the input validation errors for the input fields..! */}
-      {data.error && data.value != "" && (
+      {data.error && data.value !== "" && (
         <p className="text-xs text-end text-red-500">{data.error}</p>
       )}
     </div>

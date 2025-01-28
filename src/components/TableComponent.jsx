@@ -54,7 +54,6 @@ export default function BasicTable() {
   const [selectedEmployee, setSelectedEmployee] = useState(null);
 
   const dispatch = useDispatch();
-  console.log(loginEmployee, otherEmployees);
   const token = sessionStorage.getItem("token");
 
   async function handleDeleteButton(id) {

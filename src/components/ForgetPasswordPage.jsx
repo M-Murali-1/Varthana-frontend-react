@@ -37,9 +37,7 @@ function ForgetPasswordPage() {
 
   useEffect(() => {
     if (error !== "") {
-      console.log("rendering..!");
-
-      setError("");
+     setError("");
     }
   }, [details]);
 

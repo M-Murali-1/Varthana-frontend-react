@@ -77,7 +77,6 @@ const reducer = (state, action) => {
 function UserRegistration({ data = {}, type, handleClose = () => {} }) {
   const initialError = { type: "", message: "" };
   const [registerError, setRegisterError] = useState(initialError);
-  console.log(Object.keys(initialState));
 
   const initailStateToUse =
     type === "Update Details"
@@ -98,9 +97,7 @@ function UserRegistration({ data = {}, type, handleClose = () => {} }) {
     delete details.confirm_password;
   }
 
-  console.log("the data for the updating purpose is :", initialState);
   const dispatchEmployee = useDispatch();
-  console.log("the details while updating are  :", data);
   useEffect(() => {
     if (registerError.type !== "") {
       setRegisterError(initialError);
@@ -120,9 +117,6 @@ function UserRegistration({ data = {}, type, handleClose = () => {} }) {
           details.password
         ))) &&
     registerError?.type === "";
-  console.log("the form is valid :", isValid);
-
-  console.log(details);
   const navigate = useNavigate();
   function handleUpdateClose() {
     handleClose();

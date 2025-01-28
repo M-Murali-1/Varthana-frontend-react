@@ -14,9 +14,6 @@ function HomePage() {
 
   // Getting the token from the session storage.
   const token = sessionStorage.getItem("token");
-  useEffect(() => {
-    
-  }, []);
 
   const [open, setOpen] = useState(true);
   const handleClose = () => {
