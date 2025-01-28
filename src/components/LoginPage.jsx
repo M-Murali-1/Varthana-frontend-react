@@ -48,6 +48,7 @@ function LoginPage() {
       dispatch(fetchEmployees());
     } catch (err) {
       setError(err.response.data.message);
+      setOpen(true);
     }
   }
 
@@ -108,7 +109,7 @@ function LoginPage() {
 
   return (
     <div className="">
-      <div className=" min-h-screen flex flex-col  bg-gray-100 items-center justify-center px-2">
+      <div className=" min-h-screen flex flex-col  bg-gray-100 items-center justify-center px-2 bg-gradient-to-br from-green-100 via-gray-50 to-green-200">
         <img
           src="/Varthana_Logo1.webp"
           className="rounded-full mb-5"
@@ -125,9 +126,9 @@ function LoginPage() {
             ))}
 
             {/* Displaying the Server side errors while logging..! */}
-            <div className="text-red-500 mb-1 text-sm text-right">
+            {/* <div className="text-red-500 mb-1 text-sm text-right">
               {error && <p>{error}</p>}
-            </div>
+            </div> */}
 
             <button
               type="submit"
@@ -144,13 +145,13 @@ function LoginPage() {
           <LinkComponent path="/forget-password-page" data="Forgot Password" />
         </div>
 
-        {fetchingError && (
+        {(fetchingError || error) && (
           <div>
             <Snackbar
               open={open}
               autoHideDuration={5000}
               onClose={handleClose}
-              message={fetchingError}
+              message={(fetchingError)?fetchingError:error}
             />
           </div>
         )}

@@ -105,7 +105,7 @@ function ForgetPasswordPage() {
   console.log(inputFieldsData1?.[1]?.error, "this is the required one");
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100 px-2">
+    <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100 px-2 bg-gradient-to-br from-green-100 via-gray-50 to-green-200">
       <img src="/Varthana_Logo1.webp" className="rounded-full mb-5" alt="Varthana Logo" />
      
       <div className="bg-white p-8 rounded-lg shadow-md w-80">

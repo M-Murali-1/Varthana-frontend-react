@@ -4,37 +4,37 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchEmployees } from "../features/employeeSlice";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
-
+import FooterHomePage from "./FooterHomePage";
 import BasicTable from "./TableComponent";
 import LoginUserInfo from "./LoginUserInfo";
 
 function HomePage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
+
   // Getting the token from the session storage.
   const token = sessionStorage.getItem("token");
-  useEffect(()=>{
+  useEffect(() => {
     if (!token) {
       navigate("/login-page");
     }
-  },[])
-  
+  }, []);
+
   const [open, setOpen] = useState(true);
   const handleClose = () => {
     setOpen(false);
     navigate("/login-page");
   };
-  useEffect(()=>{
+  useEffect(() => {
     dispatch(fetchEmployees());
-  },[])
+  }, []);
 
   const { loginEmployee, otherEmployees, loading, error } = useSelector(
     (state) => state.employee
   );
-  console.log("the login employees are :",loginEmployee,otherEmployees);
-  
-  if (error!="") {
+  console.log("the login employees are :", loginEmployee, otherEmployees);
+
+  if (error != "") {
     navigate("/login-page");
   }
   if (loading) {
@@ -56,10 +56,13 @@ function HomePage() {
   const Employees = [...otherEmployees].sort((a, b) => a.id - b.id);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen relative">
       <LoginUserInfo employee={loginEmployee} />
-      <div className="">
+      <div className=" m-3">
         <BasicTable />
+      </div>
+      <div className="absolute bottom-0 w-full">
+       <FooterHomePage/>
       </div>
     </div>
   );
