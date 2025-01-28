@@ -23,7 +23,6 @@ function LoginPage() {
     if (reason === "clickaway") {
       return;
     }
-
     setOpen(false);
   };
 
@@ -33,12 +32,10 @@ function LoginPage() {
     setError("");
 
     try {
-      console.log(loginData, "this is the login data");
       const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_LOGIN_URL}`,
         loginData
       );
-
       setLoginData(initial);
 
       // Setting the token within the sessionstorage.
@@ -94,8 +91,6 @@ function LoginPage() {
 
   // If there is an error it will activates the snackbar or else it will navigate to the home page.
   useEffect(() => {
-    console.log("the fetching error here is:", fetchingError);
-
     if (fetchingError) {
       setOpen(true);
     } else if (
@@ -151,7 +146,7 @@ function LoginPage() {
               open={open}
               autoHideDuration={5000}
               onClose={handleClose}
-              message={(fetchingError)?fetchingError:error}
+              message={fetchingError ? fetchingError : error}
             />
           </div>
         )}

@@ -1,3 +1,7 @@
+import axios from "axios";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -5,39 +9,41 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { useSelector } from "react-redux";
 import EditIcon from "@mui/icons-material/Edit";
-import { DeleteForever } from "@mui/icons-material";
-import { IconButton } from "@mui/material";
-import axios from "axios";
-import { useDispatch } from "react-redux";
-import { deleteEmployee } from "../features/employeeSlice";
-import ModelforUpdateAdd from "./ModelforUpdateAdd";
-import { useState } from "react";
-import { styled } from "@mui/material/styles";
 import PersonIcon from "@mui/icons-material/Person";
 import TablePagination from "@mui/material/TablePagination";
+import { DeleteForever } from "@mui/icons-material";
+import { IconButton } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { styled } from "@mui/material/styles";
+
+import ModelforUpdateAdd from "./ModelforUpdateAdd";
 import SelectingRoleComponent from "./selectingRoleComponent";
 import InputFieldComponent from "./InputFieldComponent";
+import { deleteEmployee } from "../features/employeeSlice";
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:nth-of-type(odd)": {
     backgroundColor: theme.palette.action.hover,
   },
-  // hide last border
   "&:last-child td, &:last-child th": {
     border: 0,
   },
 }));
 
 export default function BasicTable() {
+  //Selecting the login and the other employees here.
   const { loginEmployee, otherEmployees } = useSelector(
     (state) => state.employee
   );
+
+  // State and the function for handling the filter name change.
   const [searchString, setSearchString] = useState("");
   const handleSearchString = (e) => {
     setSearchString(e.target.value);
   };
+
+  // State and the function for handling the selected role.
   const [selectedRole, setSelectedRole] = useState("");
   const handleSelectedRole = (e) => {
     setSelectedRole(e.target.value);
@@ -52,8 +58,6 @@ export default function BasicTable() {
   const token = sessionStorage.getItem("token");
 
   async function handleDeleteButton(id) {
-    console.log("the clicked:", id);
-
     const response = await axios.delete(
       `${import.meta.env.VITE_BASE_URL}${
         import.meta.env.VITE_DELETE_URL
@@ -73,22 +77,26 @@ export default function BasicTable() {
     setOpen(true);
   };
 
+  // Function for closing the model for the edit and create new.
   const handleClose = () => {
     setOpen(false);
     setSelectedEmployee(null);
   };
 
+  // Logic for handling the pagination.
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(15);
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
+  // Logic for handling the number of rows per page.
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
 
+  // Data for creating the input field for search by name.
   const searchByName = {
     id: "searchbyname",
     title: "Search By Name",
@@ -99,18 +107,14 @@ export default function BasicTable() {
     required: false,
     icon: <PersonIcon />,
   };
-  let selectingRoleInput = {
+
+  // Data required for creating the search by role dropdown.
+  const selectingRoleInput = {
     id: "role",
     value: selectedRole,
     handleChange: handleSelectedRole,
     options: ["Junior Developer", "Senior Developer", "Admin"],
   };
-  console.log(
-    "the data entered here is :",
-    searchString,
-    "the role here is :",
-    selectedRole
-  );
 
   // Filtering the employees based on the data given
   let searchEmployees = otherEmployees;
@@ -119,6 +123,8 @@ export default function BasicTable() {
       employee.name.toLowerCase().includes(searchString.toLowerCase())
     );
   }
+
+  // Filtering the data based on the selected role.
   if (selectedRole !== "") {
     searchEmployees = searchEmployees.filter(
       (employee) => employee.Role === selectedRole
@@ -127,7 +133,8 @@ export default function BasicTable() {
 
   return (
     <div>
-      {/* For the purpose of serching and filtering */}
+     
+     {/* For the purpose of serching and filtering */}
       <div className="flex justify-between items-center mx-5 my-2">
         <div className="w-2/5 md:w-1/4">
           <InputFieldComponent data={searchByName} />
@@ -137,6 +144,7 @@ export default function BasicTable() {
           <SelectingRoleComponent data={selectingRoleInput} />
         </div>
       </div>
+
       <Paper>
         <TableContainer
           sx={{ maxHeight: "55vh", overflow: "auto", position: "relative" }}
@@ -163,7 +171,7 @@ export default function BasicTable() {
                 <TableCell sx={{ color: "#55a248" }}>
                   <b>Role</b>
                 </TableCell>
-                <TableCell sx={{ color: "#55a248" }}>
+                <TableCell  sx={{ color: "#55a248" }}>
                   <b>Address</b>
                 </TableCell>
                 {(loginEmployee.Role === "Admin" ||

@@ -15,9 +15,7 @@ function HomePage() {
   // Getting the token from the session storage.
   const token = sessionStorage.getItem("token");
   useEffect(() => {
-    if (!token) {
-      navigate("/login-page");
-    }
+    
   }, []);
 
   const [open, setOpen] = useState(true);
@@ -26,13 +24,15 @@ function HomePage() {
     navigate("/login-page");
   };
   useEffect(() => {
+    if (!token) {
+      navigate("/login-page");
+    }
     dispatch(fetchEmployees());
   }, []);
 
   const { loginEmployee, otherEmployees, loading, error } = useSelector(
     (state) => state.employee
   );
-  console.log("the login employees are :", loginEmployee, otherEmployees);
 
   if (error != "") {
     navigate("/login-page");
@@ -56,7 +56,7 @@ function HomePage() {
   const Employees = [...otherEmployees].sort((a, b) => a.id - b.id);
 
   return (
-    <div className="min-h-screen relative">
+    <div className="min-h-screen relative bg-gray-50">
       <LoginUserInfo employee={loginEmployee} />
       <div className=" m-3">
         <BasicTable />

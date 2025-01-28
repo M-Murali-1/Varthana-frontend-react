@@ -5,14 +5,14 @@ import { useNavigate } from "react-router-dom";
 import InputFieldComponent from "./InputFieldComponent";
 import LinkComponent from "./LinkComponent";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import EmailIcon from "@mui/icons-material/Email";
+import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 
 import {
   userNameValidation,
   emailValidation,
   phoneNumberValidation,
 } from "../utils/validations";
-import EmailIcon from "@mui/icons-material/Email";
-import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 
 function ForgetPasswordPage() {
   const initial = { username: "", phone_number: "", email_id: "" };
@@ -22,11 +22,8 @@ function ForgetPasswordPage() {
   const [error, setError] = useState("");
 
   // Functions for handling the input field changes.
-  // const handleNameChange = (e) =>
-  //   setDetails({ ...details, name: e.target.value });
   const handleUserNameChange = (e) =>
     setDetails({ ...details, username: e.target.value });
-
   const handlePhNumberChange = (e) =>
     setDetails({ ...details, phone_number: e.target.value });
   const handleEmailChange = (e) =>
@@ -41,7 +38,7 @@ function ForgetPasswordPage() {
   useEffect(() => {
     if (error !== "") {
       console.log("rendering..!");
-      
+
       setError("");
     }
   }, [details]);
@@ -52,7 +49,6 @@ function ForgetPasswordPage() {
     try {
       let response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_FINDONE_URL}`,
-        //"http://localhost:8080/employee/findone",
         details
       );
       sessionStorage.setItem("id", response.data.id);
@@ -102,12 +98,15 @@ function ForgetPasswordPage() {
       icon: <EmailIcon />,
     },
   ];
-  console.log(inputFieldsData1?.[1]?.error, "this is the required one");
 
   return (
     <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100 px-2 bg-gradient-to-br from-green-100 via-gray-50 to-green-200">
-      <img src="/Varthana_Logo1.webp" className="rounded-full mb-5" alt="Varthana Logo" />
-     
+      <img
+        src="/Varthana_Logo1.webp"
+        className="rounded-full mb-5"
+        alt="Varthana Logo"
+      />
+
       <div className="bg-white p-8 rounded-lg shadow-md w-80">
         <h2 className="text-center text-2xl font-bold mb-6">Change Password</h2>
         <form>

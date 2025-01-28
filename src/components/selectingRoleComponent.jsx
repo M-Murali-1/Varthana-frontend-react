@@ -9,8 +9,7 @@ const SelectingRoleComponent = ({ type="", data }) => {
       >
         {type==="Update Details" && "Update Role"}
         {(type==="Register" || type==="Add New Employee") && "Select Your Role"}
-        {/* {type != "Update Details" ? "Select Your Role" : "Update Role"} */}
-      </label>
+       </label>
       <select
         id={data.id}
         value={data.value}

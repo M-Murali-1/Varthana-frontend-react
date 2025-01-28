@@ -20,7 +20,9 @@ function UserRegistrationButtons({ type, handleUpdateClose, isValid }) {
         className={`bg-[#57A649] text-white ${
           type == "Update Details" ? "w-2/5" : "w-full"
         } py-2 mt-2 rounded-md ${
-          isValid ? "hover:opacity-90 opacity-100" : "opacity-70 cursor-not-allowed"
+          isValid
+            ? "hover:opacity-90 opacity-100"
+            : "opacity-70 cursor-not-allowed"
         }`}
         disabled={!isValid}
       >

@@ -9,6 +9,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
+
 function LoginUserInfo() {
   // Methods for handling the actions on the store and redirections.
   const dispatch = useDispatch();

@@ -7,7 +7,6 @@ import LinkComponent from "./LinkComponent";
 import { updateEmployee, addNewEmployee } from "../features/employeeSlice";
 import SelectingRoleComponent from "./selectingRoleComponent";
 import UserRegistrationButtons from "./UserRegistrationButtons";
-import AddressComponent from "./AddressComponent";
 import PersonIcon from "@mui/icons-material/Person";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import EmailIcon from "@mui/icons-material/Email";
@@ -382,8 +381,6 @@ function UserRegistration({ data = {}, type, handleClose = () => {} }) {
               addressInput.map((element) => (
                 <InputFieldComponent key={element.title} data={element} />
               ))}
-            {/* Field for adding Address
-            <AddressComponent type={type} data={addressInput} /> */}
 
             {/* Field for selecting the role */}
             <SelectingRoleComponent type={type} data={selectingRoleInput} />
